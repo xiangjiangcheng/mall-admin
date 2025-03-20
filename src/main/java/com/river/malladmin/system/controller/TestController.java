@@ -1,5 +1,6 @@
 package com.river.malladmin.system.controller;
 
+import com.river.malladmin.common.result.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +19,8 @@ public class TestController {
 
     @Operation(summary = "测试")
     @GetMapping("/hello-world")
-    public String test() {
-        return "hello-world";
+    public Result<String> test() {
+        return Result.success("hello-world");
     }
 
 }

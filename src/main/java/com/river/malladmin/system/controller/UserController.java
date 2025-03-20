@@ -1,5 +1,6 @@
 package com.river.malladmin.system.controller;
 
+import com.river.malladmin.common.result.Result;
 import com.river.malladmin.system.model.SysUser;
 import com.river.malladmin.system.service.SysUserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -24,17 +25,16 @@ import java.util.List;
 @Tag(name = "01.User Apis")
 public class UserController {
 
-    @Autowired
-    private SysUserService userService;
+    private final SysUserService userService;
 
     /**
      * 获取用户列表
      */
     @Operation(summary = "获取用户列表")
     @GetMapping
-    public List<SysUser> listUsers() {
+    public Result<List<SysUser>> listUsers() {
         List<SysUser> list = userService.list();
-        return list;
+        return Result.success(list);
     }
 
     /**
@@ -45,10 +45,10 @@ public class UserController {
             @Parameter(name = "id", description = "用户ID", in = ParameterIn.PATH)
     })
     @GetMapping("/{id}")
-    public SysUser getUserById(@PathVariable Long id) {
+    public Result<SysUser> getUserById(@PathVariable Long id) {
         SysUser user = userService.getById(id);
         log.info("user:{}", user);
-        return user;
+        return Result.success(user);
     }
 
     /**
@@ -56,9 +56,9 @@ public class UserController {
      */
     @Operation(summary = "新增用户")
     @PostMapping
-    public String createUser(@RequestBody SysUser user) {
+    public Result<String> createUser(@RequestBody SysUser user) {
         userService.save(user);
-        return "用户创建成功";
+        return Result.success("用户创建成功");
     }
 
     /**
@@ -66,9 +66,9 @@ public class UserController {
      */
     @Operation(summary = "更新用户信息")
     @PutMapping("/{id}")
-    public String updateUser(@PathVariable Long id, @RequestBody SysUser user) {
+    public Result<String> updateUser(@PathVariable Long id, @RequestBody SysUser user) {
         userService.updateById(user);
-        return "用户更新成功";
+        return Result.success("用户更新成功");
     }
 
     /**
@@ -76,8 +76,8 @@ public class UserController {
      */
     @Operation(summary = "删除用户")
     @DeleteMapping("/{id}")
-    public String deleteUser(@PathVariable Long id) {
+    public Result<String> deleteUser(@PathVariable Long id) {
         userService.removeById(id);
-        return "用户删除成功";
+        return Result.success("用户删除成功");
     }
 }
