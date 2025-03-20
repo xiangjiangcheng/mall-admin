@@ -1,6 +1,8 @@
 package com.river.malladmin.common.result;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.Serializable;
 
@@ -9,44 +11,51 @@ import java.io.Serializable;
  *
  * @author JiangCheng Xiang
  */
-@Data
+@Getter
+@Setter
 public class Result<T> implements Serializable {
     // 响应码
     private String code;
+    // 响应信息
+    private String message;
     // 响应数据
     private T data;
-    // 响应信息
-    private String msg;
+
+    public Result(String code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+
+    public Result(String code, String message, T data) {
+        this.code = code;
+        this.message = message;
+        this.data = data;
+    }
 
     /**
      * 成功响应
      */
     public static <T> Result<T> success(T data) {
-        Result<T> result = new Result<>();
-        result.setCode(ResultCode.SUCCESS.getCode());
-        result.setMsg(ResultCode.SUCCESS.getMessage());
-        result.setData(data);
-        return result;
+        return new Result<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), data);
     }
 
     /**
      * 失败响应
      */
     public static <T> Result<T> failed(ResultCode resultCode) {
-        Result<T> result = new Result<>();
-        result.setCode(resultCode.getCode());
-        result.setMsg(resultCode.getMessage());
-        return result;
+        return new Result<>(resultCode.getCode(), resultCode.getMessage());
     }
 
-    /**
-     * 失败响应(系统默认错误)
-     */
+    public static <T> Result<T> failed(String code, String message) {
+        return new Result<>(code, message);
+    }
+
+    public static <T> Result<T> failed(String message) {
+        return new Result<>(ResultCode.SYSTEM_ERROR.getCode(), message);
+    }
+
     public static <T> Result<T> failed() {
-        Result<T> result = new Result<>();
-        result.setCode(ResultCode.SYSTEM_ERROR.getCode());
-        result.setMsg(ResultCode.SYSTEM_ERROR.getMessage());
-        return result;
+        return new Result<>(ResultCode.SYSTEM_ERROR.getCode(), ResultCode.SYSTEM_ERROR.getMessage());
     }
 
 }

@@ -1,5 +1,6 @@
 package com.river.malladmin.system.controller;
 
+import com.river.malladmin.common.exception.BusinessException;
 import com.river.malladmin.common.result.Result;
 import com.river.malladmin.system.model.SysUser;
 import com.river.malladmin.system.service.SysUserService;
@@ -48,6 +49,10 @@ public class UserController {
     public Result<SysUser> getUserById(@PathVariable Long id) {
         SysUser user = userService.getById(id);
         log.info("user:{}", user);
+        // 模拟异常
+        if (user == null) {
+            throw new BusinessException("用户不存在");
+        }
         return Result.success(user);
     }
 
