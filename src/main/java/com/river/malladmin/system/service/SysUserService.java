@@ -1,9 +1,7 @@
-package com.river.malladmin.service;
+package com.river.malladmin.system.service;
 
-import com.river.malladmin.model.SysUser;
+import com.river.malladmin.system.model.SysUser;
 import com.baomidou.mybatisplus.extension.service.IService;
-
-import java.util.List;
 
 /**
 * @author xiang

@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @EnableTransactionManagement
-@MapperScan("com.river.malladmin.mapper")
+@MapperScan("com.river.malladmin.system.mapper")
 public class MallAdminApplication {
 
     public static void main(String[] args) {

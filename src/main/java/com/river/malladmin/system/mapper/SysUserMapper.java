@@ -1,6 +1,6 @@
-package com.river.malladmin.mapper;
+package com.river.malladmin.system.mapper;
 
-import com.river.malladmin.model.SysUser;
+import com.river.malladmin.system.model.SysUser;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 

@@ -1,9 +1,9 @@
-package com.river.malladmin.service.impl;
+package com.river.malladmin.system.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.river.malladmin.model.SysUser;
-import com.river.malladmin.service.SysUserService;
-import com.river.malladmin.mapper.SysUserMapper;
+import com.river.malladmin.system.model.SysUser;
+import com.river.malladmin.system.service.SysUserService;
+import com.river.malladmin.system.mapper.SysUserMapper;
 import org.springframework.stereotype.Service;
 
 /**
