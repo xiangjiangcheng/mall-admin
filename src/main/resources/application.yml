@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: mall-admin
+  profiles:
+    active: dev
+
+server:
+  port: 8999
+  servlet:
+    encoding:
+      charset: UTF-8
+
+# 读取pom.xml
+project:
+  version: @project.version@

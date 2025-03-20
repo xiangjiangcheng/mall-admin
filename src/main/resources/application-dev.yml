@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/river_admin?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true
+    username: root
+    password: root
+
+mybatis-plus:
+  configuration:
+    # 驼峰命名映射
+    map-underscore-to-camel-case: true
+    # 打印 sql 日志
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto # 主键策略
+      logic-delete-field: is_deleted # 全局逻辑删除字段（可选）

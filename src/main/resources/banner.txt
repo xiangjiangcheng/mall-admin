@@ -1,0 +1,9 @@
+${AnsiColor.RED}
+ ____  _____     _______ ____
+|  _ \|_ _\ \   / / ____|  _ \
+| |_) || | \ \ / /|  _| | |_) |
+|  _ < | |  \ V / | |___|  _ <
+|_| \_\___|  \_/  |_____|_| \_\
+
+:: River Admin Version: ${project.version}
+:: Spring Boot Version: ${spring-boot.version}${spring-boot.formatted-version}
