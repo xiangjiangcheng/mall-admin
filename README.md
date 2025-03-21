@@ -20,3 +20,11 @@ Knife4j 文档地址：http://localhost:8080/doc.html
 ## 参考教程
 项目搭建（0-1）： https://www.cnblogs.com/haoxianrui/p/18683051
 Redis使用：https://www.cnblogs.com/castamere/p/13497747.html
+
+## ISSUE
+1. Lombok 注解不生效， 见POM文件最后面注释部分
+2. 加入全局异常处理器后，Knife4j文档打不开 原因是SpringBoot3.4.0+与Knife4j4.5.0不兼容，
+解决方案：A:降级SprintBoot到3.3.X, B:升级springdoc-openapi-starter-webmvc-ui 2.7.0, 
+issue details see:
+https://github.com/xiaoymin/knife4j/issues/865
+https://blog.csdn.net/Lee_SmallNorth/article/details/144528609
