@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/test")
 @RequiredArgsConstructor
-@Tag(name = "02.Test Apis")
+@Tag(name = "00.Test Apis")
 public class TestController {
 
     @Operation(summary = "测试")

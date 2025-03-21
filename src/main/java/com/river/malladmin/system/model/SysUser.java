@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Date;
+import java.util.Set;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -114,4 +115,11 @@ public class SysUser implements Serializable {
     @Schema(description = "逻辑删除标识(0-未删除 1-已删除)", example = "0")
     private Integer isDeleted;
 
+    @TableField(exist = false)
+    @Schema(description = "用户角色集")
+    private Set<String> roles;
+
+    @TableField(exist = false)
+    @Schema(description = "用户权限集")
+    private Set<String> perms;
 }

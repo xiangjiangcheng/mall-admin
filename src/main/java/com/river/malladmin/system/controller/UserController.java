@@ -23,7 +23,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
-@Tag(name = "01.User Apis")
+@Tag(name = "02.User Apis")
 public class UserController {
 
     private final SysUserService userService;

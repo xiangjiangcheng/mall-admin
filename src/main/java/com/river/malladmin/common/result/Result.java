@@ -1,6 +1,5 @@
 package com.river.malladmin.common.result;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -35,6 +34,10 @@ public class Result<T> implements Serializable {
     /**
      * 成功响应
      */
+    public static <T> Result<T> success() {
+        return new Result<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage());
+    }
+
     public static <T> Result<T> success(T data) {
         return new Result<>(ResultCode.SUCCESS.getCode(), ResultCode.SUCCESS.getMessage(), data);
     }
