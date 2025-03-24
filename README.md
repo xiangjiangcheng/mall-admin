@@ -3,7 +3,7 @@
 
 ## 技术栈
 
-Java 17 + SpringBoot 3.3.0 + Spring Security + JWT + MyBatis-Plus + Redis + MySQL 8 + Knife4j 3.0.0 + Lombok 1.18.36 + Maven 3.9.9
+Java 17 + SpringBoot 3.3.0 + Spring Security 6 + JWT + MyBatis-Plus + Redis + MySQL 8 + Knife4j 3.0.0 + Lombok 1.18.36 + Maven 3.9.9
 ## 搭建步骤
 1.spring boot  √
 2.mysql  √

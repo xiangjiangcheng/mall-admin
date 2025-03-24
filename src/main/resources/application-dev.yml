@@ -12,6 +12,9 @@ spring:
       # 如果Redis 服务未设置密码，需要将password删掉或注释，而不是设置为空字符串
       # password: 123456
       timeout: 10s
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
 
 mybatis-plus:
   configuration:

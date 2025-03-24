@@ -1,10 +1,9 @@
 package com.river.malladmin;
 
-import com.river.malladmin.system.model.SysUser;
+import com.river.malladmin.system.model.entity.User;
 import com.river.malladmin.system.service.SysUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -32,14 +31,14 @@ public class RedisTemplateTest {
     void testSetAndGet() {
         Long userId = 1L;
         // 1. 从数据库中获取用户信息
-        SysUser user = userService.getById(userId);
+        User user = userService.getById(userId);
         log.info("从数据库中获取用户信息: {}", user);
 
         // 2. 将用户信息缓存到 Redis
         redisTemplate.opsForValue().set("user:" + userId, user);
 
         // 3. 从 Redis 中获取缓存的用户信息
-        SysUser cachedUser = (SysUser) redisTemplate.opsForValue().get("user:" + userId);
+        User cachedUser = (User) redisTemplate.opsForValue().get("user:" + userId);
         log.info("从 Redis 中获取用户信息: {}", cachedUser);
     }
 

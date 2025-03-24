@@ -2,7 +2,7 @@ package com.river.malladmin.security.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.river.malladmin.security.model.SysUserDetails;
-import com.river.malladmin.system.model.SysUser;
+import com.river.malladmin.system.model.entity.User;
 import com.river.malladmin.system.service.SysUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -32,8 +32,8 @@ public class SysUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         // 查询用户基本信息
-        SysUser user = userService.getOne(new LambdaQueryWrapper<SysUser>()
-                .eq(SysUser::getUsername, username)
+        User user = userService.getOne(new LambdaQueryWrapper<User>()
+                .eq(User::getUsername, username)
         );
         if (user == null) {
             throw new UsernameNotFoundException(username);

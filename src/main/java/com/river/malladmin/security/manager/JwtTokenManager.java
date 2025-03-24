@@ -82,7 +82,7 @@ public class JwtTokenManager {
         JWT jwt = JWTUtil.parseToken(token);
         JSONObject payloads = jwt.getPayloads();
         SysUserDetails userDetails = new SysUserDetails();
-        userDetails.setUserId(payloads.getInt("userId")); // 用户ID
+        userDetails.setUserId(payloads.getLong("userId")); // 用户ID
         userDetails.setUsername(payloads.getStr(JWTPayload.SUBJECT)); // 用户名
         // 角色集合
         Set<SimpleGrantedAuthority> authorities = payloads.getJSONArray("authorities")

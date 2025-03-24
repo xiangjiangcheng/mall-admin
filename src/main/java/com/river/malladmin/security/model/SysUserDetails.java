@@ -2,7 +2,7 @@ package com.river.malladmin.security.model;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
-import com.river.malladmin.system.model.SysUser;
+import com.river.malladmin.system.model.entity.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,7 +27,7 @@ public class SysUserDetails implements UserDetails {
     /**
      * 用户ID
      */
-    private Integer userId;
+    private Long userId;
 
     /**
      * 用户名
@@ -52,7 +52,7 @@ public class SysUserDetails implements UserDetails {
     /**
      * 根据用户认证信息初始化用户详情对象
      */
-    public SysUserDetails(SysUser user) {
+    public SysUserDetails(User user) {
         this.userId = user.getId();
         this.username = user.getUsername();
         this.password = user.getPassword();

@@ -1,35 +1,25 @@
-package com.river.malladmin.system.model;
+package com.river.malladmin.system.model.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-
-import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Set;
-
+import com.river.malladmin.common.base.BaseEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.EqualsAndHashCode;
+
+import java.util.Set;
 
 /**
  * 用户表
  *
  * @TableName sys_user
  */
+
+@Data
 @Schema(description = "用户表")
 @TableName(value = "sys_user")
-@Data
-public class SysUser implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-    @Schema(description = "用户ID", example = "1")
-    @TableId(type = IdType.AUTO)
-    private Integer id;
+@EqualsAndHashCode(callSuper = true)
+public class User extends BaseEntity {
 
     /**
      * 用户名
@@ -84,36 +74,6 @@ public class SysUser implements Serializable {
      */
     @Schema(description = "用户邮箱")
     private String email;
-
-    /**
-     * 创建时间
-     */
-    @Schema(description = "创建时间")
-    private LocalDateTime createTime;
-
-    /**
-     * 创建人ID
-     */
-    @Schema(description = "创建人ID")
-    private Long createBy;
-
-    /**
-     * 更新时间
-     */
-    @Schema(description = "更新时间")
-    private LocalDateTime updateTime;
-
-    /**
-     * 修改人ID
-     */
-    @Schema(description = "修改人ID")
-    private Long updateBy;
-
-    /**
-     * 逻辑删除标识(0-未删除 1-已删除)
-     */
-    @Schema(description = "逻辑删除标识(0-未删除 1-已删除)", example = "0")
-    private Integer isDeleted;
 
     @TableField(exist = false)
     @Schema(description = "用户角色集")
