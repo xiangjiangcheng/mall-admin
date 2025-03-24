@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -58,12 +59,21 @@ public class SysUserDetails implements UserDetails {
         this.enabled = ObjectUtil.equal(user.getStatus(), 1);
 
         // 初始化角色权限集合
-        this.authorities = CollectionUtil.isNotEmpty(user.getRoles())
+        Set<SimpleGrantedAuthority> roles = CollectionUtil.isNotEmpty(user.getRoles())
                 ? user.getRoles().stream()
                 // 角色名加上前缀 "ROLE_"，用于区分角色 (ROLE_ADMIN) 和权限 (sys:user:add)
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
                 .collect(Collectors.toSet())
                 : Collections.emptySet();
+
+        Set<SimpleGrantedAuthority> perms = CollectionUtil.isNotEmpty(user.getPerms())
+                ? user.getPerms().stream()
+                // 角色名加上前缀 "ROLE_"，用于区分角色 (ROLE_ADMIN) 和权限 (sys:user:add)
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toSet())
+                : Collections.emptySet();
+
+        this.authorities = CollectionUtil.addAll(roles, perms);
     }
 
     @Override

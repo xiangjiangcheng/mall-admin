@@ -1,7 +1,10 @@
 package com.river.malladmin.config;
 
+import com.river.malladmin.security.filter.JWTAuthenticationFilter;
 import com.river.malladmin.security.handler.MyAccessDeniedHandler;
 import com.river.malladmin.security.handler.MyAuthenticationEntryPoint;
+import com.river.malladmin.security.manager.JwtTokenManager;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +18,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * @author JiangCheng Xiang
@@ -22,6 +26,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 @EnableWebSecurity // 启用 Spring Security 的 Web 安全功能，允许配置安全过滤链
 @EnableMethodSecurity // 启用方法级别的安全控制（如 @PreAuthorize 等）
+@RequiredArgsConstructor
 public class SecurityConfig {
 
     /**
@@ -36,6 +41,9 @@ public class SecurityConfig {
             "/api/v1/auth/login"
     };
 
+    // JWT Token 服务 , 用于 Token 的生成、解析、验证等操作
+    private final JwtTokenManager jwtTokenManager;
+
     /**
      * 配置安全过滤链，用于定义哪些请求需要认证或授权
      */
@@ -49,6 +57,8 @@ public class SecurityConfig {
                                 .requestMatchers(IGNORE_URIS).permitAll() // 登录接口无需认证
                                 .anyRequest().authenticated() // 其他请求必须认证
                 )
+                // JWT 验证和解析过滤器
+                .addFilterBefore(new JWTAuthenticationFilter(jwtTokenManager), UsernamePasswordAuthenticationFilter.class)
                 // 使用无状态认证，禁用 Session 管理（前后端分离 + JWT）
                 .sessionManagement(configurer ->
                         configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)

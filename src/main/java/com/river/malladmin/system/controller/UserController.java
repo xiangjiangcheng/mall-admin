@@ -11,7 +11,7 @@ import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,6 +33,7 @@ public class UserController {
      */
     @Operation(summary = "获取用户列表")
     @GetMapping
+    @PreAuthorize("hasAuthority('sys:user:query')")
     public Result<List<SysUser>> listUsers() {
         List<SysUser> list = userService.list();
         return Result.success(list);
@@ -46,6 +47,7 @@ public class UserController {
             @Parameter(name = "id", description = "用户ID", in = ParameterIn.PATH)
     })
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('sys:user:view')")
     public Result<SysUser> getUserById(@PathVariable Long id) {
         SysUser user = userService.getById(id);
         log.info("user:{}", user);
