@@ -7,6 +7,7 @@ import cn.hutool.crypto.digest.DigestUtil;
 import cn.hutool.http.useragent.UserAgent;
 import cn.hutool.http.useragent.UserAgentUtil;
 import cn.hutool.json.JSONUtil;
+import com.river.malladmin.common.contant.BizConstants;
 import com.river.malladmin.common.enums.LogModuleEnum;
 import com.river.malladmin.common.util.IPUtils;
 import com.river.malladmin.security.utils.SecurityUtils;
@@ -22,6 +23,7 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.cache.CacheManager;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -43,7 +45,7 @@ import java.util.Objects;
 public class LogAspect {
     private final LogService logService;
     private final HttpServletRequest request;
-    // private final CacheManager cacheManager;
+    private final CacheManager cacheManager;
 
     /**
      * 切点
@@ -214,16 +216,14 @@ public class LogAspect {
         }
         // 给userAgentStringMD5加密一次防止过长
         String userAgentStringMD5 = DigestUtil.md5Hex(userAgentString);
-        // TODO: 2025/3/25 引入缓存caffeine
-        //判断是否命中缓存
-        // UserAgent userAgent = Objects.requireNonNull(cacheManager.getCache("userAgent")).get(userAgentStringMD5, UserAgent.class);
-        // if (userAgent != null) {
-        //     return userAgent;
-        // }
-        // userAgent = UserAgentUtil.parse(userAgentString);
-        // Objects.requireNonNull(cacheManager.getCache("userAgent")).put(userAgentStringMD5, userAgent);
-        // return userAgent;
-        return UserAgentUtil.parse(userAgentString);
+        // 判断是否命中缓存
+        UserAgent userAgent = Objects.requireNonNull(cacheManager.getCache(BizConstants.CACHE_USERAGENT)).get(userAgentStringMD5, UserAgent.class);
+        if (userAgent != null) {
+            return userAgent;
+        }
+        userAgent = UserAgentUtil.parse(userAgentString);
+        Objects.requireNonNull(cacheManager.getCache(BizConstants.CACHE_USERAGENT)).put(userAgentStringMD5, userAgent);
+        return userAgent;
     }
 
 }

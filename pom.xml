@@ -26,6 +26,8 @@
         <hutool.version>5.8.34</hutool.version>
         <!-- IP 地区转换 -->
         <ip2region.version>2.7.0</ip2region.version>
+        <!-- 缓存caffeine -->
+        <caffeine.version>3.1.5</caffeine.version>
     </properties>
 
     <dependencies>
@@ -55,6 +57,13 @@
             <groupId>org.lionsoul</groupId>
             <artifactId>ip2region</artifactId>
             <version>${ip2region.version}</version>
+        </dependency>
+
+        <!-- 缓存caffeine -->
+        <dependency>
+            <groupId>com.github.ben-manes.caffeine</groupId>
+            <artifactId>caffeine</artifactId>
+            <version>${caffeine.version}</version>
         </dependency>
 
         <!-- MySQL 8 驱动 -->
