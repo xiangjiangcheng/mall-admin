@@ -10,7 +10,7 @@ import com.river.malladmin.system.model.form.UserForm;
 import com.river.malladmin.system.model.query.UserPageQuery;
 import com.river.malladmin.system.model.vo.UserDetailsVO;
 import com.river.malladmin.system.model.vo.UserPageVO;
-import com.river.malladmin.system.service.SysUserService;
+import com.river.malladmin.system.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -29,19 +29,19 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 @Tag(name = "02.User Apis")
 public class UserController {
 
-    private final SysUserService userService;
+    private final UserService userService;
 
     /**
      * 获取用户列表
      */
     @Operation(summary = "获取用户列表")
     @GetMapping
-    @PreAuthorize("hasAuthority('sys:user:query')")
+    // @PreAuthorize("hasAuthority('sys:user:query')")
     @Log(value = "获取用户列表", module = LogModuleEnum.USER)
     public Result<List<User>> listUsers() {
         List<User> list = userService.list();
@@ -50,7 +50,8 @@ public class UserController {
 
     @Operation(summary = "用户分页列表")
     @GetMapping("/page")
-    @PreAuthorize("hasAuthority('sys:user:query')")
+    // @PreAuthorize("hasAuthority('sys:user:query')")
+    @Log(value = "用户分页列表", module = LogModuleEnum.USER)
     public PageResult<UserPageVO> pageUsers(@Valid UserPageQuery query) {
         Page<UserPageVO> result = userService.getUserPage(query);
         return PageResult.success(result);
@@ -65,6 +66,7 @@ public class UserController {
     })
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('sys:user:view')")
+    @Log(value = "获取用户详情", module = LogModuleEnum.USER)
     public Result<UserDetailsVO> getUserById(@PathVariable Long id) {
         UserDetailsVO user = userService.getUserById(id);
         return Result.success(user);
@@ -75,6 +77,8 @@ public class UserController {
      */
     @Operation(summary = "新增用户")
     @PostMapping
+    @PreAuthorize("hasAuthority('sys:user:add')")
+    @Log(value = "新增用户", module = LogModuleEnum.USER)
     public Result<Long> createUser(@Valid @RequestBody UserForm userForm) {
         Long userId = userService.saveUser(userForm);
         return Result.success(userId);
@@ -85,6 +89,8 @@ public class UserController {
      */
     @Operation(summary = "更新用户信息")
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('sys:user:edit')")
+    @Log(value = "更新用户信息", module = LogModuleEnum.USER)
     public Result<String> updateUser(@PathVariable Long id, @RequestBody User user) {
         userService.updateById(user);
         return Result.success("用户更新成功");
@@ -95,6 +101,8 @@ public class UserController {
      */
     @Operation(summary = "删除用户")
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('sys:user:delete')")
+    @Log(value = "删除用户", module = LogModuleEnum.USER)
     public Result<String> deleteUser(@PathVariable Long id) {
         userService.removeById(id);
         return Result.success("用户删除成功");

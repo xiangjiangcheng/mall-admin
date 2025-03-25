@@ -3,7 +3,7 @@ package com.river.malladmin.security.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.river.malladmin.security.model.SysUserDetails;
 import com.river.malladmin.system.model.entity.User;
-import com.river.malladmin.system.service.SysUserService;
+import com.river.malladmin.system.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,7 +24,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class SysUserDetailsService implements UserDetailsService {
 
-    private final SysUserService userService;
+    private final UserService userService;
 
     /**
      * 根据用户名加载用户的认证信息

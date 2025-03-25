@@ -1,7 +1,10 @@
 package com.river.malladmin.system.controller;
 
+import com.river.malladmin.common.annotation.Log;
+import com.river.malladmin.common.enums.LogModuleEnum;
 import com.river.malladmin.common.result.Result;
 import com.river.malladmin.system.service.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -22,11 +25,13 @@ public class AuthController {
 
     private final AuthService authService;
 
+    @Operation(summary = "用户名密码登录")
     @PostMapping("/login")
     @Parameters({
             @Parameter(name = "username", description = "用户名", example = "admin"),
             @Parameter(name = "password", description = "密码", example = "123456")
     })
+    @Log(value = "用户名密码登录", module = LogModuleEnum.AUTH)
     public Result<String> login(@RequestParam String username,
                                 @RequestParam String password) {
         String accessToken = authService.login(username, password);

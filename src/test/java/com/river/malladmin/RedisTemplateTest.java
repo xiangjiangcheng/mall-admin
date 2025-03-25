@@ -1,7 +1,7 @@
 package com.river.malladmin;
 
 import com.river.malladmin.system.model.entity.User;
-import com.river.malladmin.system.service.SysUserService;
+import com.river.malladmin.system.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class RedisTemplateTest {
     @Autowired
     private StringRedisTemplate stringRedisTemplate;
     @Autowired
-    private SysUserService userService;
+    private UserService userService;
 
     @Test
     void testSetAndGet() {

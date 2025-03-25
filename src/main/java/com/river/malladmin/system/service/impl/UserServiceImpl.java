@@ -13,7 +13,7 @@ import com.river.malladmin.system.model.form.UserForm;
 import com.river.malladmin.system.model.query.UserPageQuery;
 import com.river.malladmin.system.model.vo.UserDetailsVO;
 import com.river.malladmin.system.model.vo.UserPageVO;
-import com.river.malladmin.system.service.SysUserService;
+import com.river.malladmin.system.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,7 +26,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @RequiredArgsConstructor
-public class SysUserServiceImpl extends ServiceImpl<UserMapper, User> implements SysUserService {
+public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     private final PasswordEncoder passwordEncoder;
 

@@ -1,0 +1,13 @@
+package com.river.malladmin.system.service;
+
+import com.river.malladmin.system.model.entity.UserRole;
+import com.baomidou.mybatisplus.extension.service.IService;
+
+/**
+* @author xiang
+* @description 针对表【sys_user_role(用户和角色关联表)】的数据库操作Service
+* @createDate 2025-03-25 22:31:25
+*/
+public interface UserRoleService extends IService<UserRole> {
+
+}
