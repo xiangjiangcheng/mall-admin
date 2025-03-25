@@ -3,7 +3,7 @@
 
 ## 技术栈
 
-Java 17 + SpringBoot 3.3.0 + Spring Security 6 + JWT + MyBatis-Plus + Redis + MySQL 8 + Knife4j 3.0.0 + Lombok 1.18.36 + Maven 3.9.9
+Java 17 + SpringBoot 3.3.0 + Spring Security 6 + JWT + MyBatis-Plus + Redis + MySQL 8 + Knife4j 4.5.0 + Lombok 1.18.36 + Maven 3.9.9
 ## 搭建步骤
 1.spring boot  √
 2.mysql  √
@@ -23,6 +23,7 @@ Knife4j 文档地址：http://localhost:8080/doc.html
 ## 参考教程
 项目搭建（0-1）： https://www.cnblogs.com/haoxianrui/p/18683051
 Redis使用：https://www.cnblogs.com/castamere/p/13497747.html
+Spring boot 自定义注解+@Aspect实现切面输出日志：https://www.cnblogs.com/codecat/p/13810999.html
 
 ## ISSUE
 1.Lombok 注解不生效， 见POM文件最后面注释部分

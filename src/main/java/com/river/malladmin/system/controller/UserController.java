@@ -1,6 +1,8 @@
 package com.river.malladmin.system.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.river.malladmin.common.annotation.Log;
+import com.river.malladmin.common.enums.LogModuleEnum;
 import com.river.malladmin.common.result.PageResult;
 import com.river.malladmin.common.result.Result;
 import com.river.malladmin.system.model.entity.User;
@@ -40,6 +42,7 @@ public class UserController {
     @Operation(summary = "获取用户列表")
     @GetMapping
     @PreAuthorize("hasAuthority('sys:user:query')")
+    @Log(value = "获取用户列表", module = LogModuleEnum.USER)
     public Result<List<User>> listUsers() {
         List<User> list = userService.list();
         return Result.success(list);

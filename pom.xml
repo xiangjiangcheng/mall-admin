@@ -24,6 +24,8 @@
         <mybatis-plus.version>3.5.9</mybatis-plus.version>
         <knife4j.version>4.5.0</knife4j.version>
         <hutool.version>5.8.34</hutool.version>
+        <!-- IP 地区转换 -->
+        <ip2region.version>2.7.0</ip2region.version>
     </properties>
 
     <dependencies>
@@ -41,6 +43,18 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <!-- aop 依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.lionsoul</groupId>
+            <artifactId>ip2region</artifactId>
+            <version>${ip2region.version}</version>
         </dependency>
 
         <!-- MySQL 8 驱动 -->
