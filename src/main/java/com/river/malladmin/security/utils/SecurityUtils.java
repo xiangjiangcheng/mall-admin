@@ -20,9 +20,6 @@ import java.util.stream.Collectors;
 
 /**
  * Spring Security 工具类
- *
- * @author Ray
- * @since 2021/1/10
  */
 public class SecurityUtils {
 
@@ -41,7 +38,6 @@ public class SecurityUtils {
         }
         return Optional.empty();
     }
-
 
     /**
      * 获取用户ID
@@ -119,6 +115,5 @@ public class SecurityUtils {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         return request.getHeader(HttpHeaders.AUTHORIZATION);
     }
-
 
 }

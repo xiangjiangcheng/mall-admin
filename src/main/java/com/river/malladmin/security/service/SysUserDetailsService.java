@@ -2,7 +2,10 @@ package com.river.malladmin.security.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.river.malladmin.security.model.SysUserDetails;
+import com.river.malladmin.system.model.entity.Role;
 import com.river.malladmin.system.model.entity.User;
+import com.river.malladmin.system.service.RoleMenuService;
+import com.river.malladmin.system.service.UserRoleService;
 import com.river.malladmin.system.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,7 +13,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * 用户认证信息加载服务类
@@ -25,6 +30,8 @@ import java.util.Set;
 public class SysUserDetailsService implements UserDetailsService {
 
     private final UserService userService;
+    private final UserRoleService userRoleService;
+    private final RoleMenuService roleMenuService;
 
     /**
      * 根据用户名加载用户的认证信息
@@ -38,12 +45,13 @@ public class SysUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException(username);
         }
-        // 模拟设置角色，实际应从数据库获取用户角色信息
-        Set<String> roles = Set.of("ADMIN");
-        user.setRoles(roles);
+        // 获取用户角色信息
+        List<Role> roles = userRoleService.getRolesByUserId(user.getId());
+        user.setRoles(roles.stream().map(Role::getCode).collect(Collectors.toSet()));
 
-        // 模拟设置权限，实际应从数据库获取用户权限信息
-        Set<String> perms = Set.of("sys:user:query");
+        // 获取用户权限信息
+        Set<Long> roleIds = roles.stream().map(Role::getId).collect(Collectors.toSet());
+        Set<String> perms = roleMenuService.getPermsByRoleIds(roleIds);
         user.setPerms(perms);
 
         // 将数据库中查询到的用户信息封装成 Spring Security 需要的 UserDetails 对象

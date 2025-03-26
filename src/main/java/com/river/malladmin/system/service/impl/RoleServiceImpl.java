@@ -11,6 +11,10 @@ import com.river.malladmin.system.model.vo.RolePageVO;
 import com.river.malladmin.system.service.RoleService;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
 /**
  * @author xiang
  * @description 针对表【sys_role(角色表)】的数据库操作Service实现
@@ -32,6 +36,12 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     @Override
     public Long saveRole(RoleForm userForm) {
         return null;
+    }
+
+    @Override
+    public List<Role> getRolesByIds(Set<Long> roleIds) {
+        if (roleIds.isEmpty()) return Collections.emptyList();
+        return this.lambdaQuery().in(Role::getId, roleIds).list();
     }
 }
 

@@ -1,6 +1,7 @@
 package com.river.malladmin.system.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.river.malladmin.common.annotation.Log;
 import com.river.malladmin.common.enums.LogModuleEnum;
 import com.river.malladmin.common.result.PageResult;
@@ -65,7 +66,7 @@ public class UserController {
             @Parameter(name = "id", description = "用户ID", in = ParameterIn.PATH)
     })
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('sys:user:view')")
+    // @PreAuthorize("hasAuthority('sys:user:view')")
     @Log(value = "获取用户详情", module = LogModuleEnum.USER)
     public Result<UserDetailsVO> getUserById(@PathVariable Long id) {
         UserDetailsVO user = userService.getUserById(id);

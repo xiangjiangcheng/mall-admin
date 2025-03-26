@@ -119,6 +119,16 @@ INSERT INTO `sys_role_menu` VALUES (2, 2);
 INSERT INTO `sys_role_menu` VALUES (2, 3);
 INSERT INTO `sys_role_menu` VALUES (2, 4);
 
+INSERT INTO `sys_role_menu` VALUES (2, 31);
+INSERT INTO `sys_role_menu` VALUES (2, 32);
+INSERT INTO `sys_role_menu` VALUES (2, 33);
+INSERT INTO `sys_role_menu` VALUES (2, 70);
+INSERT INTO `sys_role_menu` VALUES (2, 71);
+INSERT INTO `sys_role_menu` VALUES (2, 72);
+INSERT INTO `sys_role_menu` VALUES (2, 73);
+INSERT INTO `sys_role_menu` VALUES (2, 74);
+INSERT INTO `sys_role_menu` VALUES (2, 75);
+
 DROP TABLE IF EXISTS `sys_user_role`;
 CREATE TABLE `sys_user_role`  (
                                   `user_id` bigint NOT NULL COMMENT '用户ID',

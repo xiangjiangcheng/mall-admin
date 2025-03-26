@@ -38,13 +38,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public <T> Result<T> handleException(Exception e) throws Exception {
+        log.error(e.getMessage(), e);
         // 如果是 Spring Security 的认证异常或授权异常，直接抛出，交由 Spring Security 的异常处理器处理
         if (e instanceof AccessDeniedException
                 || e instanceof AuthenticationException) {
             throw e;
         }
-
-        log.error(e.getMessage(), e);
         return Result.failed("系统异常:" + e.getMessage());
     }
 

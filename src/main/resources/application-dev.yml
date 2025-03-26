@@ -10,7 +10,7 @@ spring:
       host: localhost  # Redis 主机地址
       port: 6379  # Redis 端口
       # 如果Redis 服务未设置密码，需要将password删掉或注释，而不是设置为空字符串
-      # password: 123456
+      password: 123456
       timeout: 10s
   jackson:
     date-format: yyyy-MM-dd HH:mm:ss
@@ -21,7 +21,7 @@ mybatis-plus:
     # 驼峰命名映射
     map-underscore-to-camel-case: true
     # 打印 sql 日志
-#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
   global-config:
     db-config:
       id-type: auto # 主键策略
