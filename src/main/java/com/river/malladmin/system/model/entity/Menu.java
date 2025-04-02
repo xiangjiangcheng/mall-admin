@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.river.malladmin.common.enums.MenuTypeEnum;
 import lombok.Data;
 
 import java.io.Serial;
@@ -46,7 +47,7 @@ public class Menu implements Serializable {
     /**
      * 菜单类型（1-菜单 2-目录 3-外链 4-按钮）
      */
-    private Integer type;
+    private MenuTypeEnum type;
 
     /**
      * 路由名称（Vue Router 中用于命名路由）

@@ -25,4 +25,6 @@ public interface RoleService extends IService<Role> {
     Long saveRole(RoleForm userForm);
 
     List<Role> getRolesByIds(Set<Long> roleIds);
+
+    void deleteRoleById(Long id);
 }

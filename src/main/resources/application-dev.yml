@@ -1,9 +1,16 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/river_admin?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&autoReconnect=true&allowMultiQueries=true
+    url: jdbc:mysql://localhost:3306/river_admin?zeroDateTimeBehavior=convertToNull&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false&autoReconnect=true&allowMultiQueries=true
     username: root
     password: root
+    hikari:
+      pool-name: MyHikariCP
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      connection-timeout: 30000
   data:
     redis:
       database: 0    # Redis 数据库索引
@@ -26,6 +33,8 @@ mybatis-plus:
     db-config:
       id-type: auto # 主键策略
       logic-delete-field: is_deleted # 全局逻辑删除字段（可选）
+      logic-delete-value: 1 # 逻辑已删除值
+      logic-not-delete-value: 0 # 逻辑未删除值
 
 # springdoc-openapi项目配置
 springdoc:

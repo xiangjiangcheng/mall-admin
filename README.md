@@ -52,3 +52,5 @@ Knife4j 文档地址：http://localhost:8080/doc.html <br>
 issue details see: <br>
 https://github.com/xiaoymin/knife4j/issues/865 <br>
 https://blog.csdn.net/Lee_SmallNorth/article/details/144528609 <br>
+3.Mybatis-plus逻辑删除
+https://blog.csdn.net/smile_795/article/details/138602029 <br>

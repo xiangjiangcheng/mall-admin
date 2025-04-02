@@ -20,4 +20,6 @@ public interface UserService extends IService<User> {
     UserDetailsVO getUserById(Long id);
 
     Long saveUser(UserForm userForm);
+
+    void deleteUserById(Long id);
 }

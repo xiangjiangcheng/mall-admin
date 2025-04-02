@@ -4,12 +4,24 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.river.malladmin.system.mapper.RoleMenuMapper">
 
-    <resultMap id="BaseResultMap" type="com.river.malladmin.system.model.entity.RoleMenu">
-            <result property="roleId" column="role_id" jdbcType="BIGINT"/>
-            <result property="menuId" column="menu_id" jdbcType="BIGINT"/>
+    <resultMap id="RolePermsMap" type="com.river.malladmin.system.model.vo.RolePermVO">
+        <result property="roleCode" column="code"/>
+        <collection property="perms" ofType="string" javaType="java.util.Set">
+            <result column="perm"/>
+        </collection>
     </resultMap>
 
-    <sql id="Base_Column_List">
-        role_id,menu_id
-    </sql>
+    <select id="selectRolePerms" resultMap="RolePermsMap">
+        select r.`code`,
+               m.perm
+        from sys_role_menu rm
+                 left join sys_role r on r.id = rm.role_id
+                 left join sys_menu m on m.id = rm.menu_id
+        <where>
+            m.type = 4
+            <if test="roleCode != null and roleCode != ''">
+                and r.`code` = #{roleCode}
+            </if>
+        </where>
+    </select>
 </mapper>

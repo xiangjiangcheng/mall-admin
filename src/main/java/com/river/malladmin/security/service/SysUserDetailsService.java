@@ -1,6 +1,7 @@
 package com.river.malladmin.security.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.river.malladmin.common.contant.RedisConstants;
 import com.river.malladmin.security.model.SysUserDetails;
 import com.river.malladmin.system.model.entity.Role;
 import com.river.malladmin.system.model.entity.User;
@@ -8,6 +9,7 @@ import com.river.malladmin.system.service.RoleMenuService;
 import com.river.malladmin.system.service.UserRoleService;
 import com.river.malladmin.system.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -32,6 +34,7 @@ public class SysUserDetailsService implements UserDetailsService {
     private final UserService userService;
     private final UserRoleService userRoleService;
     private final RoleMenuService roleMenuService;
+    private final RedisTemplate<String, Object> redisTemplate;
 
     /**
      * 根据用户名加载用户的认证信息

@@ -1,6 +1,6 @@
 package com.river.malladmin.security.filter;
 
-import com.river.malladmin.common.contant.BizConstants;
+import com.river.malladmin.common.contant.SecurityConstants;
 import com.river.malladmin.common.result.ResultCode;
 import com.river.malladmin.common.util.ResponseUtils;
 import com.river.malladmin.security.manager.JwtTokenManager;
@@ -10,6 +10,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,6 +25,7 @@ import java.io.IOException;
  *
  * @author JiangCheng Xiang
  */
+@Slf4j
 @RequiredArgsConstructor
 public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
@@ -33,9 +35,9 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = request.getHeader(HttpHeaders.AUTHORIZATION);
         try {
-            if (StringUtils.isNotBlank(token) && token.startsWith(BizConstants.BEARER_PREFIX)) {
+            if (StringUtils.isNotBlank(token) && token.startsWith(SecurityConstants.BEARER_PREFIX)) {
                 // 去除 Bearer 前缀
-                token = token.substring(BizConstants.BEARER_PREFIX.length());
+                token = token.substring(SecurityConstants.BEARER_PREFIX.length());
                 // 校验 JWT Token ，包括验签和是否过期
                 boolean isValidate = jwtTokenManager.validateToken(token);
                 if (!isValidate) {
@@ -48,6 +50,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
+            log.error("JWTAuthenticationFilter#doFilterInternal(), JWT token 验证失败={}", e.getMessage(), e);
             SecurityContextHolder.clearContext();
             ResponseUtils.writeErrMsg(response, ResultCode.TOKEN_INVALID);
             return;

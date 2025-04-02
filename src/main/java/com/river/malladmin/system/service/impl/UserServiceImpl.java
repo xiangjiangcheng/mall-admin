@@ -72,6 +72,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         return entity.getId();
     }
+
+    @Override
+    public void deleteUserById(Long id) {
+        this.lambdaUpdate().set(User::getIsDeleted, true).eq(User::getId, id).update();
+    }
 }
 
 

@@ -13,6 +13,5 @@ import java.util.Set;
 public class RoleDetailsVO extends RolePageVO {
 
     private Set<String> permissions;
-    private Set<String> roles;
 
 }

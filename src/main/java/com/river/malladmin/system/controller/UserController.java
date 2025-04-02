@@ -1,7 +1,6 @@
 package com.river.malladmin.system.controller;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.river.malladmin.common.annotation.Log;
 import com.river.malladmin.common.enums.LogModuleEnum;
 import com.river.malladmin.common.result.PageResult;
@@ -42,7 +41,7 @@ public class UserController {
      */
     @Operation(summary = "获取用户列表")
     @GetMapping
-    // @PreAuthorize("hasAuthority('sys:user:query')")
+    // @PreAuthorize("@ss.hasPermission('sys:user:query')")
     @Log(value = "获取用户列表", module = LogModuleEnum.USER)
     public Result<List<User>> listUsers() {
         List<User> list = userService.list();
@@ -51,7 +50,7 @@ public class UserController {
 
     @Operation(summary = "用户分页列表")
     @GetMapping("/page")
-    // @PreAuthorize("hasAuthority('sys:user:query')")
+    // @PreAuthorize("@ss.hasPermission('sys:user:query')")
     @Log(value = "用户分页列表", module = LogModuleEnum.USER)
     public PageResult<UserPageVO> pageUsers(@Valid UserPageQuery query) {
         Page<UserPageVO> result = userService.getUserPage(query);
@@ -66,7 +65,7 @@ public class UserController {
             @Parameter(name = "id", description = "用户ID", in = ParameterIn.PATH)
     })
     @GetMapping("/{id}")
-    // @PreAuthorize("hasAuthority('sys:user:view')")
+    // @PreAuthorize("@ss.hasPermission('sys:user:view')")
     @Log(value = "获取用户详情", module = LogModuleEnum.USER)
     public Result<UserDetailsVO> getUserById(@PathVariable Long id) {
         UserDetailsVO user = userService.getUserById(id);
@@ -78,7 +77,7 @@ public class UserController {
      */
     @Operation(summary = "新增用户")
     @PostMapping
-    @PreAuthorize("hasAuthority('sys:user:add')")
+    @PreAuthorize("@ss.hasPermission('sys:user:add')")
     @Log(value = "新增用户", module = LogModuleEnum.USER)
     public Result<Long> createUser(@Valid @RequestBody UserForm userForm) {
         Long userId = userService.saveUser(userForm);
@@ -90,7 +89,7 @@ public class UserController {
      */
     @Operation(summary = "更新用户信息")
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('sys:user:edit')")
+    @PreAuthorize("@ss.hasPermission('sys:user:edit')")
     @Log(value = "更新用户信息", module = LogModuleEnum.USER)
     public Result<String> updateUser(@PathVariable Long id, @RequestBody User user) {
         userService.updateById(user);
@@ -102,10 +101,10 @@ public class UserController {
      */
     @Operation(summary = "删除用户")
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('sys:user:delete')")
+    @PreAuthorize("@ss.hasPermission('sys:user:delete')")
     @Log(value = "删除用户", module = LogModuleEnum.USER)
     public Result<String> deleteUser(@PathVariable Long id) {
-        userService.removeById(id);
+        userService.deleteUserById(id);
         return Result.success("用户删除成功");
     }
 }

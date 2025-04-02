@@ -36,7 +36,7 @@ public class RoleController {
 
     @Operation(summary = "角色分页列表")
     @GetMapping("/page")
-    // @PreAuthorize("hasAuthority('sys:role:query')")
+    // @PreAuthorize("@ss.hasPermission('sys:role:query')")
     @Log(value = "角色分页列表", module = LogModuleEnum.ROLE)
     public PageResult<RolePageVO> page(@Valid RolePageQuery query) {
         Page<RolePageVO> result = roleService.getRolePage(query);
@@ -51,7 +51,7 @@ public class RoleController {
             @Parameter(name = "id", description = "角色ID", in = ParameterIn.PATH)
     })
     @GetMapping("/{id}")
-    // @PreAuthorize("hasAuthority('sys:role:details')")
+    // @PreAuthorize("@ss.hasPermission('sys:role:details')")
     @Log(value = "获取角色详情", module = LogModuleEnum.ROLE)
     public Result<RoleDetailsVO> details(@PathVariable Long id) {
         RoleDetailsVO user = roleService.getRoleById(id);
@@ -63,7 +63,7 @@ public class RoleController {
      */
     @Operation(summary = "新增角色")
     @PostMapping
-    @PreAuthorize("hasAuthority('sys:role:add')")
+    @PreAuthorize("@ss.hasPermission('sys:role:add')")
     @Log(value = "新增角色", module = LogModuleEnum.ROLE)
     public Result<Long> createRole(@Valid @RequestBody RoleForm userForm) {
         Long userId = roleService.saveRole(userForm);
@@ -75,7 +75,7 @@ public class RoleController {
      */
     @Operation(summary = "更新角色信息")
     @PutMapping("/{id}")
-    @PreAuthorize("hasAuthority('sys:role:edit')")
+    @PreAuthorize("@ss.hasPermission('sys:role:edit')")
     @Log(value = "更新角色信息", module = LogModuleEnum.ROLE)
     public Result<String> updateRole(@PathVariable Long id, @RequestBody Role user) {
         roleService.updateById(user);
@@ -87,7 +87,7 @@ public class RoleController {
      */
     @Operation(summary = "删除角色")
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAuthority('sys:role:delete')")
+    @PreAuthorize("@ss.hasPermission('sys:role:delete')")
     @Log(value = "删除角色", module = LogModuleEnum.ROLE)
     public Result<String> deleteRole(@PathVariable Long id) {
         roleService.removeById(id);

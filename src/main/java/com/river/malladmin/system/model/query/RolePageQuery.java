@@ -16,25 +16,15 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 public class RolePageQuery extends BasePageQuery {
 
-    @Schema(description = "角色ID")
-    private Long id;
+    @Schema(description = "关键字(角色名称/角色编码)")
+    private String keywords;
 
-    @Schema(description = "角色名称")
-    private String name;
+    @Schema(description = "开始日期")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDateTime startDate;
 
-    @Schema(description = "角色编码")
-    private String code;
-
-    @Schema(description = "角色状态")
-    private Integer status;
-
-    @Schema(description = "排序")
-    private Integer sort;
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime createTime;
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime updateTime;
+    @Schema(description = "结束日期")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDateTime endDate;
 
 }

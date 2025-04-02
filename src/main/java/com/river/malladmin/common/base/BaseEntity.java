@@ -1,9 +1,6 @@
 package com.river.malladmin.common.base;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.*;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -58,6 +55,7 @@ public class BaseEntity implements Serializable {
      * 逻辑删除标识(0-未删除 1-已删除)
      */
     @Schema(description = "逻辑删除标识(0-未删除 1-已删除)", example = "0")
+    @TableLogic
     private Integer isDeleted;
 
 }

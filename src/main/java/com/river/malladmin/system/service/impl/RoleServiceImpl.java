@@ -17,8 +17,6 @@ import java.util.Set;
 
 /**
  * @author xiang
- * @description 针对表【sys_role(角色表)】的数据库操作Service实现
- * @createDate 2025-03-25 22:31:04
  */
 @Service
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements RoleService {
@@ -42,6 +40,11 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role> implements Ro
     public List<Role> getRolesByIds(Set<Long> roleIds) {
         if (roleIds.isEmpty()) return Collections.emptyList();
         return this.lambdaQuery().in(Role::getId, roleIds).list();
+    }
+
+    @Override
+    public void deleteRoleById(Long id) {
+        this.lambdaUpdate().eq(Role::getId, id).remove();
     }
 }
 

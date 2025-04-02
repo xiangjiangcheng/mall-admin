@@ -1,15 +1,19 @@
 package com.river.malladmin.security.manager;
 
+import ch.qos.logback.core.util.StringUtil;
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONObject;
 import cn.hutool.jwt.JWT;
 import cn.hutool.jwt.JWTPayload;
 import cn.hutool.jwt.JWTUtil;
 import com.river.malladmin.common.contant.RedisConstants;
+import com.river.malladmin.common.contant.SecurityConstants;
 import com.river.malladmin.security.model.AuthenticationToken;
 import com.river.malladmin.security.model.SysUserDetails;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,10 +21,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -98,7 +99,6 @@ public class JwtTokenManager {
         return JWTUtil.createToken(payload, secretKey.getBytes());
     }
 
-
     /**
      * 解析 JWT Token 获取 Authentication 对象 - 用于接口请求时解析 JWT Token 获取用户信息
      *
@@ -134,19 +134,18 @@ public class JwtTokenManager {
         if (isValid) {
             JSONObject payloads = jwt.getPayloads();
             // jwt的唯一身份标识
-            String jwtId = (String) payloads.get(JWTPayload.JWT_ID);
-
-            // TODO: 3/26/2025  检查是否在黑名单内
-            Object o = redisTemplate.opsForValue().get(token);
-            // if () {
-            //
-            // }
-
-
+            String jwtId = payloads.getStr(JWTPayload.JWT_ID);
+            // 黑名单Token key
+            String key = StrUtil.format(RedisConstants.Auth.TOKEN_BLACKLIST, jwtId);
+            // 检查 Token 是否在黑名单中
+            Boolean isBlacklisted = redisTemplate.hasKey(key);
+            if (Boolean.TRUE.equals(isBlacklisted)) {
+                // 在黑名单，则返回false，标识token无效
+                return false;
+            }
         }
         return isValid;
     }
-
 
     /**
      * 将token加入黑名单中，（应用场景 用户注销和修改密码）
@@ -154,14 +153,26 @@ public class JwtTokenManager {
      * @param token 旧的token
      */
     public void invalidateToken(String token) {
+        if (StringUtils.isNotBlank(token) && token.startsWith(SecurityConstants.BEARER_PREFIX)) {
+            token = token.substring(SecurityConstants.BEARER_PREFIX.length());
+        }
+        // 解析token
         JWT jwt = JWTUtil.parseToken(token);
 
         // 黑名单Token Key
-        String key = RedisConstants.Auth.BLACKLIST_TOKEN + jwt.getPayloads().get(JWTPayload.JWT_ID);
-
-        // TODO: 3/26/2025
-        // redisTemplate.opsForValue().set(key, null, expirationIn, TimeUnit.SECONDS);
+        String jwtId = jwt.getPayloads().getStr(JWTPayload.JWT_ID);
+        String key = StrUtil.format(RedisConstants.Auth.TOKEN_BLACKLIST, jwtId);
+        // 过期时间，单位(秒)
+        Integer expiresAt = jwt.getPayloads().getInt(JWTPayload.EXPIRES_AT);
+        if (Objects.nonNull(expiresAt)) {
+            long expirationIn = expiresAt - DateUtil.currentSeconds();
+            if (expirationIn > 0) {
+                redisTemplate.opsForValue().set(key, jwtId, expirationIn, TimeUnit.SECONDS);
+            }
+        } else {
+            // 若token是永久性的，则永远加入黑名单
+            redisTemplate.opsForValue().set(key, jwtId);
+        }
     }
-
 
 }
