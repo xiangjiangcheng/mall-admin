@@ -41,7 +41,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                 // 校验 JWT Token ，包括验签和是否过期
                 boolean isValidate = jwtTokenManager.validateToken(token);
                 if (!isValidate) {
-                    ResponseUtils.writeErrMsg(response, ResultCode.TOKEN_INVALID);
+                    ResponseUtils.writeErrMsg(response, ResultCode.ACCESS_TOKEN_INVALID);
                     return;
                 }
 
@@ -52,7 +52,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
         } catch (Exception e) {
             log.error("JWTAuthenticationFilter#doFilterInternal(), JWT token 验证失败={}", e.getMessage(), e);
             SecurityContextHolder.clearContext();
-            ResponseUtils.writeErrMsg(response, ResultCode.TOKEN_INVALID);
+            ResponseUtils.writeErrMsg(response, ResultCode.ACCESS_TOKEN_INVALID);
             return;
         }
         // 无 Token 或 Token 验证通过时，继续执行过滤链。

@@ -1,6 +1,5 @@
 package com.river.malladmin.system.service.impl;
 
-import com.river.malladmin.common.contant.RedisConstants;
 import com.river.malladmin.security.manager.JwtTokenManager;
 import com.river.malladmin.security.model.AuthenticationToken;
 import com.river.malladmin.security.utils.SecurityUtils;

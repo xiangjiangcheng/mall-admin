@@ -24,7 +24,7 @@ public class MyAuthenticationEntryPoint implements AuthenticationEntryPoint {
             ResponseUtils.writeErrMsg(response, ResultCode.USER_PASSWORD_ERROR);
         } else {
             // token 无效或者 token 过期
-            ResponseUtils.writeErrMsg(response, ResultCode.TOKEN_INVALID);
+            ResponseUtils.writeErrMsg(response, ResultCode.ACCESS_TOKEN_INVALID);
         }
     }
 }

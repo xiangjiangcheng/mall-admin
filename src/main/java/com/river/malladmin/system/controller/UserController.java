@@ -107,4 +107,12 @@ public class UserController {
         userService.deleteUserById(id);
         return Result.success("用户删除成功");
     }
+
+    @Operation(summary = "获取当前登录用户")
+    @GetMapping("/me")
+    @Log(value = "获取当前登录用户", module = LogModuleEnum.USER)
+    public Result<UserDetailsVO> me() {
+        UserDetailsVO user = userService.me();
+        return Result.success(user);
+    }
 }

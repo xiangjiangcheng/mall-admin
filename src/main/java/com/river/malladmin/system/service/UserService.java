@@ -22,4 +22,6 @@ public interface UserService extends IService<User> {
     Long saveUser(UserForm userForm);
 
     void deleteUserById(Long id);
+
+    UserDetailsVO me();
 }

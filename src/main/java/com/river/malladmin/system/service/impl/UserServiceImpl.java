@@ -1,5 +1,6 @@
 package com.river.malladmin.system.service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -7,17 +8,26 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.river.malladmin.common.base.BasePageQuery;
 import com.river.malladmin.common.contant.SystemConstants;
 import com.river.malladmin.common.exception.BusinessException;
+import com.river.malladmin.security.utils.SecurityUtils;
 import com.river.malladmin.system.mapper.UserMapper;
+import com.river.malladmin.system.model.entity.Role;
 import com.river.malladmin.system.model.entity.User;
 import com.river.malladmin.system.model.form.UserForm;
 import com.river.malladmin.system.model.query.UserPageQuery;
 import com.river.malladmin.system.model.vo.UserDetailsVO;
 import com.river.malladmin.system.model.vo.UserPageVO;
+import com.river.malladmin.system.service.RoleMenuService;
+import com.river.malladmin.system.service.UserRoleService;
 import com.river.malladmin.system.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author xiang
@@ -29,6 +39,8 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
     private final PasswordEncoder passwordEncoder;
+    private final UserRoleService userRoleService;
+    private final RoleMenuService roleMenuService;
 
     @Override
     public Page<UserPageVO> getUserPage(UserPageQuery query) {
@@ -45,7 +57,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
         UserDetailsVO vo = new UserDetailsVO();
         BeanUtils.copyProperties(user, vo);
-        // TODO: 2025/3/24 获取用户权限
+        List<Role> roles = userRoleService.getRolesByUserId(id);
+        Set<Long> roleIds = roles.stream().map(Role::getId).collect(Collectors.toSet());
+        vo.setRoles(roles.stream().map(Role::getCode).collect(Collectors.toSet()));
+        vo.setRoleNames(CollUtil.join(roles.stream().map(Role::getName).collect(Collectors.toSet()), ","));
+        Set<String> permissions = roleMenuService.getPermsByRoleIds(roleIds);
+        vo.setPermissions(permissions);
         return vo;
     }
 
@@ -76,6 +93,13 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     @Override
     public void deleteUserById(Long id) {
         this.lambdaUpdate().set(User::getIsDeleted, true).eq(User::getId, id).update();
+    }
+
+    @Override
+    public UserDetailsVO me() {
+        Long userId = SecurityUtils.getUserId();
+        if (Objects.isNull(userId)) return null;
+        return this.getUserById(userId);
     }
 }
 

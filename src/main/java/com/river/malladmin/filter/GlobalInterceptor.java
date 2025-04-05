@@ -1,5 +1,6 @@
 package com.river.malladmin.filter;
 
+import com.river.malladmin.security.utils.SecurityUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
@@ -23,14 +24,15 @@ public class GlobalInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
         Long startTimestamp = (Long) request.getAttribute("start_timestamp");
+        String username = SecurityUtils.getUsername();
         long endTimestamp = System.currentTimeMillis();
         String method = request.getMethod();
         int status = response.getStatus();
         StringBuffer requestURL = request.getRequestURL();
         if (status != 200) {
-            logger.warn("[{}][{}] took {} ms {}", method, status, (endTimestamp - startTimestamp), requestURL);
+            logger.warn("[{}][{}][{}] took {} ms {}", method, status, username, (endTimestamp - startTimestamp), requestURL);
         } else {
-            logger.info("[{}][{}] took {} ms {}", method, status, (endTimestamp - startTimestamp), requestURL);
+            logger.info("[{}][{}][{}] took {} ms {}", method, status, username, (endTimestamp - startTimestamp), requestURL);
         }
     }
 }

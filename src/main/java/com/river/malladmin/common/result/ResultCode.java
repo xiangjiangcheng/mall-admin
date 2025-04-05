@@ -11,9 +11,8 @@ import java.io.Serializable;
 public enum ResultCode implements Serializable {
 
     SUCCESS("00000", "操作成功"),
-    TOKEN_INVALID("A0230", "Token 无效或已过期"),
+    ACCESS_TOKEN_INVALID("A0230", "Token 无效或已过期"),
     ACCESS_UNAUTHORIZED("A0301", "访问未授权"),
-    ACCESS_TOKEN_INVALID("A0302", "Token 无效或已过期"),
     USER_PASSWORD_ERROR("A0403", "用户名或密码错误"),
     SYSTEM_ERROR("B0001", "系统错误");
 
