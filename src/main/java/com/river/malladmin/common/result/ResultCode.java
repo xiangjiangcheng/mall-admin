@@ -18,7 +18,8 @@ public enum ResultCode implements Serializable {
     USER_VERIFICATION_CODE_EXPIRED("A0500", "验证码已过期"),
     USER_VERIFICATION_CODE_ERROR("A0501", "验证码错误"),
 
-    SYSTEM_ERROR("B0001", "系统错误");
+    SYSTEM_ERROR("B0001", "系统错误"),
+    USER_NOT_EXIST("B0100", "用户不存在");
 
     private final String code;
     private final String message;

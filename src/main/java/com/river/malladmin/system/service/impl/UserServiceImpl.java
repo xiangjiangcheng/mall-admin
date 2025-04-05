@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.river.malladmin.common.base.BasePageQuery;
 import com.river.malladmin.common.contant.SystemConstants;
 import com.river.malladmin.common.exception.BusinessException;
+import com.river.malladmin.common.result.ResultCode;
 import com.river.malladmin.security.utils.SecurityUtils;
 import com.river.malladmin.system.mapper.UserMapper;
 import com.river.malladmin.system.model.entity.Role;
@@ -23,6 +24,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -100,6 +102,17 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         Long userId = SecurityUtils.getUserId();
         if (Objects.isNull(userId)) return null;
         return this.getUserById(userId);
+    }
+
+    @Override
+    @Transactional
+    public boolean updateUser(Long id, UserForm userForm) {
+        User user = this.getById(id);
+        if (user == null) {
+            throw new BusinessException(ResultCode.USER_NOT_EXIST);
+        }
+        BeanUtils.copyProperties(userForm, user);
+        return this.updateById(user);
     }
 }
 

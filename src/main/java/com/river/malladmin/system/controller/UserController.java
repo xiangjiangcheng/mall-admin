@@ -89,10 +89,13 @@ public class UserController {
      */
     @Operation(summary = "更新用户信息")
     @PutMapping("/{id}")
+    @Parameters({
+            @Parameter(name = "id", description = "用户ID", in = ParameterIn.PATH)
+    })
     @PreAuthorize("@ss.hasPermission('sys:user:edit')")
     @Log(value = "更新用户信息", module = LogModuleEnum.USER)
-    public Result<String> updateUser(@PathVariable Long id, @RequestBody User user) {
-        userService.updateById(user);
+    public Result<String> updateUser(@PathVariable Long id, @RequestBody @Valid UserForm userForm) {
+        boolean result = userService.updateUser(id, userForm);
         return Result.success("用户更新成功");
     }
 
