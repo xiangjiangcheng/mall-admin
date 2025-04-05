@@ -1,8 +1,17 @@
 package com.river.malladmin.system.service.impl;
 
+import cn.hutool.captcha.AbstractCaptcha;
+import cn.hutool.captcha.CaptchaUtil;
+import cn.hutool.captcha.generator.CodeGenerator;
+import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
+import com.river.malladmin.common.contant.RedisConstants;
+import com.river.malladmin.common.enums.CaptchaTypeEnum;
+import com.river.malladmin.config.property.CaptchaProperties;
 import com.river.malladmin.security.manager.JwtTokenManager;
 import com.river.malladmin.security.model.AuthenticationToken;
 import com.river.malladmin.security.utils.SecurityUtils;
+import com.river.malladmin.system.model.vo.CaptchaVO;
 import com.river.malladmin.system.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -11,6 +20,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+
+import java.awt.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author JiangCheng Xiang
@@ -27,6 +39,9 @@ public class AuthServiceImpl implements AuthService {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
+    private final CaptchaProperties captchaProperties;
+    private final CodeGenerator codeGenerator;
+    private final Font captchaFont;
 
     @Override
     public AuthenticationToken login(String username, String password) {
@@ -49,5 +64,53 @@ public class AuthServiceImpl implements AuthService {
         // 清空Security上下文
         SecurityContextHolder.clearContext();
         return true;
+    }
+
+    /**
+     * 获取验证码
+     *
+     * @return 验证码
+     */
+    @Override
+    public CaptchaVO getCaptcha() {
+
+        String captchaType = captchaProperties.getType();
+        int width = captchaProperties.getWidth();
+        int height = captchaProperties.getHeight();
+        int interfereCount = captchaProperties.getInterfereCount();
+        int codeLength = captchaProperties.getCode().getLength();
+
+        AbstractCaptcha captcha;
+        if (CaptchaTypeEnum.CIRCLE.name().equalsIgnoreCase(captchaType)) {
+            captcha = CaptchaUtil.createCircleCaptcha(width, height, codeLength, interfereCount);
+        } else if (CaptchaTypeEnum.GIF.name().equalsIgnoreCase(captchaType)) {
+            captcha = CaptchaUtil.createGifCaptcha(width, height, codeLength);
+        } else if (CaptchaTypeEnum.LINE.name().equalsIgnoreCase(captchaType)) {
+            captcha = CaptchaUtil.createLineCaptcha(width, height, codeLength, interfereCount);
+        } else if (CaptchaTypeEnum.SHEAR.name().equalsIgnoreCase(captchaType)) {
+            captcha = CaptchaUtil.createShearCaptcha(width, height, codeLength, interfereCount);
+        } else {
+            throw new IllegalArgumentException("Invalid captcha type: " + captchaType);
+        }
+        captcha.setGenerator(codeGenerator);
+        captcha.setTextAlpha(captchaProperties.getTextAlpha());
+        captcha.setFont(captchaFont);
+
+        String captchaCode = captcha.getCode();
+        String imageBase64Data = captcha.getImageBase64Data();
+
+        // 验证码文本缓存至Redis，用于登录校验
+        String captchaKey = IdUtil.fastSimpleUUID();
+        redisTemplate.opsForValue().set(
+                StrUtil.format(RedisConstants.Captcha.IMAGE_CODE, captchaKey),
+                captchaCode,
+                captchaProperties.getExpireSeconds(),
+                TimeUnit.SECONDS
+        );
+
+        return CaptchaVO.builder()
+                .captchaKey(captchaKey)
+                .captchaBase64(imageBase64Data)
+                .build();
     }
 }

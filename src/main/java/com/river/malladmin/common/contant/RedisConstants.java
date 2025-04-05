@@ -17,4 +17,8 @@ public interface RedisConstants {
         String ROLE_PERMS = "system:role:perms";
     }
 
+    interface Captcha {
+        String IMAGE_CODE = "captcha:image:{}";
+    }
+
 }

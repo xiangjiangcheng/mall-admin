@@ -4,6 +4,7 @@ import com.river.malladmin.common.annotation.Log;
 import com.river.malladmin.common.enums.LogModuleEnum;
 import com.river.malladmin.common.result.Result;
 import com.river.malladmin.security.model.AuthenticationToken;
+import com.river.malladmin.system.model.vo.CaptchaVO;
 import com.river.malladmin.system.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -44,5 +45,11 @@ public class AuthController {
         return Result.success(logout);
     }
 
-
+    @Operation(summary = "获取验证码")
+    @GetMapping("/captcha")
+    @Log(value = "获取验证码", module = LogModuleEnum.AUTH)
+    public Result<CaptchaVO> getCaptcha() {
+        CaptchaVO captcha = authService.getCaptcha();
+        return Result.success(captcha);
+    }
 }

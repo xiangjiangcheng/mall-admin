@@ -12,6 +12,7 @@ Java 17 + SpringBoot 3.3.10 + Spring Security 6 + JWT + MyBatis-Plus + Redis + M
 5.集成Redis <br>
 6.集成Spring security + JWT认证鉴权 <br>
 7.集成Caffeine缓存 <br>
+8.登录captcha 验证码 <br>
 
 ## TODO
 1.实现权限管理 <br>
@@ -38,6 +39,8 @@ Swagger UI 文档地址：http://localhost:8080/swagger-ui/index.html <br>
 Knife4j 文档地址：http://localhost:8080/doc.html <br>
 2.关于JWT-toekn <br>
 访问 https://jwt.io/ 解析返回的 token ，主要分为三部分 Header(头部) 、Payload(负载) 和 Signature(签名) ，其中负载除了固定字段之外，还出现自定义扩展的字段 userId。
+3.关于easy captcha 验证码 <br>
+https://blog.csdn.net/m0_62909831/article/details/145358729
 
 ## 参考教程
 1.项目搭建（0-1）： https://www.cnblogs.com/haoxianrui/p/18683051 <br>

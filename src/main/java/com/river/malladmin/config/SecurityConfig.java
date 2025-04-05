@@ -1,5 +1,7 @@
 package com.river.malladmin.config;
 
+import cn.hutool.captcha.generator.CodeGenerator;
+import com.river.malladmin.security.filter.CaptchaValidationFilter;
 import com.river.malladmin.security.filter.JWTAuthenticationFilter;
 import com.river.malladmin.security.handler.MyAccessDeniedHandler;
 import com.river.malladmin.security.handler.MyAuthenticationEntryPoint;
@@ -7,6 +9,7 @@ import com.river.malladmin.security.manager.JwtTokenManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -38,11 +41,14 @@ public class SecurityConfig {
             "/swagger-ui.html",
             "/webjars/**",
             "/doc.html",
-            "/api/v1/auth/login"
+            "/api/v1/auth/login",
+            "/api/v1/auth/captcha",
     };
 
     // JWT Token 服务 , 用于 Token 的生成、解析、验证等操作
     private final JwtTokenManager jwtTokenManager;
+    private final RedisTemplate<String, Object> redisTemplate;
+    private final CodeGenerator codeGenerator;
 
     /**
      * 配置安全过滤链，用于定义哪些请求需要认证或授权
@@ -57,6 +63,8 @@ public class SecurityConfig {
                                 .requestMatchers(IGNORE_URIS).permitAll() // 登录接口无需认证
                                 .anyRequest().authenticated() // 其他请求必须认证
                 )
+                // Captcha 验证码过滤器
+                .addFilterBefore(new CaptchaValidationFilter(redisTemplate, codeGenerator), UsernamePasswordAuthenticationFilter.class)
                 // JWT 验证和解析过滤器
                 .addFilterBefore(new JWTAuthenticationFilter(jwtTokenManager), UsernamePasswordAuthenticationFilter.class)
                 // 使用无状态认证，禁用 Session 管理（前后端分离 + JWT）
