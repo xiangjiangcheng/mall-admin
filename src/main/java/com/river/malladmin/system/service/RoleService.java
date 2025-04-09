@@ -22,7 +22,7 @@ public interface RoleService extends IService<Role> {
 
     RoleDetailsVO getRoleById(Long id);
 
-    Long saveRole(RoleForm userForm);
+    Long saveRole(RoleForm roleForm);
 
     List<Role> getRolesByIds(Set<Long> roleIds);
 

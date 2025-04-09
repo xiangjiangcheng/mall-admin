@@ -65,8 +65,8 @@ public class RoleController {
     @PostMapping
     @PreAuthorize("@ss.hasPermission('sys:role:add')")
     @Log(value = "新增角色", module = LogModuleEnum.ROLE)
-    public Result<Long> createRole(@Valid @RequestBody RoleForm userForm) {
-        Long userId = roleService.saveRole(userForm);
+    public Result<Long> createRole(@Valid @RequestBody RoleForm roleForm) {
+        Long userId = roleService.saveRole(roleForm);
         return Result.success(userId);
     }
 
@@ -77,8 +77,8 @@ public class RoleController {
     @PutMapping("/{id}")
     @PreAuthorize("@ss.hasPermission('sys:role:edit')")
     @Log(value = "更新角色信息", module = LogModuleEnum.ROLE)
-    public Result<String> updateRole(@PathVariable Long id, @RequestBody Role user) {
-        roleService.updateById(user);
+    public Result<String> updateRole(@PathVariable Long id, @RequestBody Role role) {
+        roleService.updateById(role);
         return Result.success("角色更新成功");
     }
 

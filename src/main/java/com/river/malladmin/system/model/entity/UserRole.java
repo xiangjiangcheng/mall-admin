@@ -1,6 +1,7 @@
 package com.river.malladmin.system.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serial;
@@ -13,6 +14,7 @@ import java.io.Serializable;
  */
 @TableName(value = "sys_user_role")
 @Data
+@Builder
 public class UserRole implements Serializable {
 
     @Serial

@@ -49,9 +49,9 @@ public class UserForm {
     @Schema(description = "部门ID")
     private Long deptId;
 
-    // @Schema(description = "角色ID集合")
-    // @NotEmpty(message = "用户角色不能为空")
-    // private List<Long> roleIds;
+    @Schema(description = "角色ID集合")
+    @NotEmpty(message = "用户角色不能为空")
+    private List<Long> roleIds;
 
     @Schema(description = "微信openId")
     private String openId;

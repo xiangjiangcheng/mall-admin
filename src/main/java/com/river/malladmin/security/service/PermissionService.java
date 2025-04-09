@@ -60,7 +60,7 @@ public class PermissionService {
         return hasPermission;
     }
 
-    private Set<String> getRolePermsFormCache(Set<String> roleCodes) {
+    public Set<String> getRolePermsFormCache(Set<String> roleCodes) {
         // 检查输入是否为空
         if (CollectionUtil.isEmpty(roleCodes)) {
             return Collections.emptySet();

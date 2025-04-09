@@ -1,8 +1,8 @@
 package com.river.malladmin.system.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.river.malladmin.system.model.entity.Role;
 import com.river.malladmin.system.model.entity.UserRole;
-import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
 import java.util.Set;
@@ -17,4 +17,6 @@ public interface UserRoleService extends IService<UserRole> {
     List<Role> getRolesByUserId(Long userId);
 
     Set<String> getRoleCodesByUserId(Long userId);
+
+    void saveUserRoles(Long userId, List<Long> roleIds);
 }

@@ -15,6 +15,7 @@ import com.river.malladmin.system.model.entity.Role;
 import com.river.malladmin.system.model.entity.User;
 import com.river.malladmin.system.model.form.UserForm;
 import com.river.malladmin.system.model.query.UserPageQuery;
+import com.river.malladmin.system.model.vo.RoleVO;
 import com.river.malladmin.system.model.vo.UserDetailsVO;
 import com.river.malladmin.system.model.vo.UserPageVO;
 import com.river.malladmin.system.service.RoleMenuService;
@@ -61,7 +62,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         BeanUtils.copyProperties(user, vo);
         List<Role> roles = userRoleService.getRolesByUserId(id);
         Set<Long> roleIds = roles.stream().map(Role::getId).collect(Collectors.toSet());
-        vo.setRoles(roles.stream().map(Role::getCode).collect(Collectors.toSet()));
+        vo.setRoleIds(roleIds);
+        vo.setRoles(roles.stream().map(RoleVO::from).collect(Collectors.toSet()));
         vo.setRoleNames(CollUtil.join(roles.stream().map(Role::getName).collect(Collectors.toSet()), ","));
         Set<String> permissions = roleMenuService.getPermsByRoleIds(roleIds);
         vo.setPermissions(permissions);
@@ -69,6 +71,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
     }
 
     @Override
+    @Transactional
     public Long saveUser(UserForm userForm) {
         String username = userForm.getUsername();
 
@@ -86,8 +89,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         boolean result = this.save(entity);
 
         if (result) {
-            // TODO: 2025/3/24 保存用户角色
-            // userRoleService.saveUserRoles(entity.getId(), userForm.getRoleIds());
+            userRoleService.saveUserRoles(entity.getId(), userForm.getRoleIds());
         }
         return entity.getId();
     }
@@ -112,7 +114,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             throw new BusinessException(ResultCode.USER_NOT_EXIST);
         }
         BeanUtils.copyProperties(userForm, user);
-        return this.updateById(user);
+        boolean result = this.updateById(user);
+        if (result) {
+            userRoleService.saveUserRoles(id, userForm.getRoleIds());
+        }
+        return result;
     }
 }
 

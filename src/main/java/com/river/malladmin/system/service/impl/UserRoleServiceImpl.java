@@ -1,5 +1,6 @@
 package com.river.malladmin.system.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.river.malladmin.system.mapper.UserRoleMapper;
@@ -9,6 +10,7 @@ import com.river.malladmin.system.service.RoleService;
 import com.river.malladmin.system.service.UserRoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -37,6 +39,17 @@ public class UserRoleServiceImpl extends ServiceImpl<UserRoleMapper, UserRole> i
     public Set<String> getRoleCodesByUserId(Long userId) {
         List<Role> roles = this.getRolesByUserId(userId);
         return roles.stream().map(Role::getCode).collect(Collectors.toSet());
+    }
+
+    @Override
+    @Transactional
+    public void saveUserRoles(Long userId, List<Long> roleIds) {
+        this.getBaseMapper().delete(new LambdaQueryWrapper<UserRole>().eq(UserRole::getUserId, userId));
+        if (CollectionUtil.isNotEmpty(roleIds)) {
+            List<UserRole> userRoles = roleIds.stream()
+                    .map(roleId -> UserRole.builder().roleId(roleId).userId(userId).build()).collect(Collectors.toList());
+            this.saveBatch(userRoles);
+        }
     }
 }
 

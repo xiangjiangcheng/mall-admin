@@ -13,6 +13,7 @@ import java.util.Set;
 public class UserDetailsVO extends UserPageVO {
 
     private Set<String> permissions;
-    private Set<String> roles;
+    private Set<Long> roleIds;
+    private Set<RoleVO> roles;
 
 }

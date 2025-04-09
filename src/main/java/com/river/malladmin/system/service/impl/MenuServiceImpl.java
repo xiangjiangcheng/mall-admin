@@ -1,6 +1,5 @@
 package com.river.malladmin.system.service.impl;
 
-import cn.hutool.core.collection.ListUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.river.malladmin.system.mapper.MenuMapper;
 import com.river.malladmin.system.model.entity.Menu;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Service;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author xiang
