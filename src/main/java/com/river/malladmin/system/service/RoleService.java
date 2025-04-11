@@ -1,8 +1,8 @@
 package com.river.malladmin.system.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.river.malladmin.system.model.entity.Role;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.river.malladmin.system.model.entity.Role;
 import com.river.malladmin.system.model.form.RoleForm;
 import com.river.malladmin.system.model.query.RolePageQuery;
 import com.river.malladmin.system.model.vo.RoleDetailsVO;
@@ -27,4 +27,10 @@ public interface RoleService extends IService<Role> {
     List<Role> getRolesByIds(Set<Long> roleIds);
 
     void deleteRoleById(Long id);
+
+    boolean updateRole(Long id, RoleForm roleForm);
+
+    List<Long> getRoleMenuIds(Long id);
+
+    boolean assignMenusToRole(Long id, List<Long> menuIds);
 }

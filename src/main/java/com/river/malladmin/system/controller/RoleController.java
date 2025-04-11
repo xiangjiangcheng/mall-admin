@@ -5,7 +5,6 @@ import com.river.malladmin.common.annotation.Log;
 import com.river.malladmin.common.enums.LogModuleEnum;
 import com.river.malladmin.common.result.PageResult;
 import com.river.malladmin.common.result.Result;
-import com.river.malladmin.system.model.entity.Role;
 import com.river.malladmin.system.model.form.RoleForm;
 import com.river.malladmin.system.model.query.RolePageQuery;
 import com.river.malladmin.system.model.vo.RoleDetailsVO;
@@ -21,6 +20,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author JiangCheng Xiang
@@ -77,9 +78,30 @@ public class RoleController {
     @PutMapping("/{id}")
     @PreAuthorize("@ss.hasPermission('sys:role:edit')")
     @Log(value = "更新角色信息", module = LogModuleEnum.ROLE)
-    public Result<String> updateRole(@PathVariable Long id, @RequestBody Role role) {
-        roleService.updateById(role);
-        return Result.success("角色更新成功");
+    public Result<String> updateRole(@PathVariable Long id, @RequestBody RoleForm roleForm) {
+        boolean result = roleService.updateRole(id, roleForm);
+        return Result.judge(result);
+    }
+
+    @Operation(summary = "修改角色状态")
+    @PutMapping("/{id}/status")
+    public Result<String> updateRoleStatus(@PathVariable Long id, @RequestBody RoleForm roleForm) {
+        boolean result = roleService.updateRole(id, roleForm);
+        return Result.judge(result);
+    }
+
+    @Operation(summary = "获取角色的权限ID列表")
+    @GetMapping("/{id}/menuIds")
+    public Result<List<Long>> getRoleMenuIds(@PathVariable Long id) {
+        List<Long> result = roleService.getRoleMenuIds(id);
+        return Result.success(result);
+    }
+
+    @Operation(summary = "分配权限")
+    @PutMapping("/{id}/menus")
+    public Result<String> assignMenusToRole(@PathVariable Long id, @RequestBody List<Long> menuIds) {
+        boolean result = roleService.assignMenusToRole(id, menuIds);
+        return Result.judge(result);
     }
 
     /**

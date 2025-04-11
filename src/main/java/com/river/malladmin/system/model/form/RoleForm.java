@@ -27,6 +27,9 @@ public class RoleForm {
     @Schema(description = "角色状态(1-正常 0-停用)", example = "1")
     private Integer status;
 
+    @Schema(description = "描述")
+    private String description;
+
     public Role toEntity(RoleForm roleForm) {
         if (roleForm == null) {
             return null;

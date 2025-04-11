@@ -61,4 +61,12 @@ public class Result<T> implements Serializable {
         return new Result<>(ResultCode.SYSTEM_ERROR.getCode(), ResultCode.SYSTEM_ERROR.getMessage());
     }
 
+    public static <T> Result<T> judge(boolean status) {
+        if (status) {
+            return success();
+        } else {
+            return failed();
+        }
+    }
+
 }

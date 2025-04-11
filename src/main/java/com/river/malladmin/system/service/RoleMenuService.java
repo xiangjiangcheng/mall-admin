@@ -1,8 +1,8 @@
 package com.river.malladmin.system.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.river.malladmin.system.model.entity.Menu;
 import com.river.malladmin.system.model.entity.RoleMenu;
-import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
 import java.util.Set;
@@ -17,4 +17,13 @@ public interface RoleMenuService extends IService<RoleMenu> {
     List<Menu> getMenusByRoleIds(Set<Long> roleIds);
 
     Set<String> getPermsByRoleIds(Set<Long> roleIds);
+
+    List<Long> listMenuIdsByRoleId(Long roleId);
+
+    boolean assignMenusToRole(Long roleId, List<Long> menuIds);
+
+    void refreshRolePermsCache(String roleCode);
+
+    void refreshRolePermsCache(String oldRoleCode, String roleRoleCode);
+
 }

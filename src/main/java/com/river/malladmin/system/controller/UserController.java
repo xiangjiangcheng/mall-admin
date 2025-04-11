@@ -96,7 +96,7 @@ public class UserController {
     @Log(value = "更新用户信息", module = LogModuleEnum.USER)
     public Result<String> updateUser(@PathVariable Long id, @RequestBody @Valid UserForm userForm) {
         boolean result = userService.updateUser(id, userForm);
-        return Result.success("用户更新成功");
+        return Result.judge(result);
     }
 
     /**

@@ -31,16 +31,18 @@ public class RolePageVO {
     @Schema(description = "排序")
     private Integer sort;
 
+    @Schema(description = "描述")
+    private String description;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createTime;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updateTime;
 
-    public static RolePageVO from(Role role) {
+    public static <T extends RolePageVO> T from(Role role, T to) {
         if (Objects.isNull(role)) return null;
-        RolePageVO vo = new RolePageVO();
-        BeanUtils.copyProperties(role, vo);
-        return vo;
+        BeanUtils.copyProperties(role, to);
+        return to;
     }
 }

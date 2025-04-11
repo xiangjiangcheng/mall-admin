@@ -86,6 +86,7 @@ CREATE TABLE `sys_role`  (
                              `code` varchar(32) NOT NULL COMMENT '角色编码',
                              `sort` int NULL COMMENT '显示顺序',
                              `status` tinyint(1) DEFAULT 1 COMMENT '角色状态(1-正常 0-停用)',
+                             `description` varchar(255) NULL COMMENT '角色描述',
                              `data_scope` tinyint NULL COMMENT '数据权限(0-所有数据 1-部门及子部门数据 2-本部门数据3-本人数据)',
                              `create_by` bigint NULL COMMENT '创建人 ID',
                              `create_time` datetime NULL COMMENT '创建时间',

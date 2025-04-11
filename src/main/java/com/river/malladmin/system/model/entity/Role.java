@@ -34,6 +34,8 @@ public class Role extends BaseEntity {
      */
     private Integer status;
 
+    private String description;
+
     /**
      * 数据权限(0-所有数据 1-部门及子部门数据 2-本部门数据3-本人数据)
      */

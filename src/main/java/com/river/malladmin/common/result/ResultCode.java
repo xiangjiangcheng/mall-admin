@@ -20,7 +20,9 @@ public enum ResultCode implements Serializable {
 
     SYSTEM_ERROR("B0001", "系统错误"),
     USER_NOT_EXIST("B0100", "用户不存在"),
-    ROLE_NOT_EXIST("B0200", "角色不存在"),
+    ROLE_NOT_EXIST("B0101", "角色不存在"),
+    ROLE_REPEATED("B0102", "角色名称或角色编码已存在，请修改后重试！"),
+    MENU_NOT_EXIST("B0203", "角色不存在"),
     ;
 
     private final String code;
