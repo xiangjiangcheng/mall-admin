@@ -2,25 +2,30 @@ package com.river.malladmin.system.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.river.malladmin.common.base.Option;
+import com.river.malladmin.common.contant.SystemConstants;
 import com.river.malladmin.common.enums.MenuTypeEnum;
+import com.river.malladmin.common.enums.StatusEnum;
 import com.river.malladmin.common.exception.BusinessException;
 import com.river.malladmin.common.result.ResultCode;
+import com.river.malladmin.security.utils.SecurityUtils;
 import com.river.malladmin.system.mapper.MenuMapper;
 import com.river.malladmin.system.model.entity.Menu;
 import com.river.malladmin.system.model.form.MenuForm;
 import com.river.malladmin.system.model.query.MenuPageQuery;
 import com.river.malladmin.system.model.vo.MenuVO;
+import com.river.malladmin.system.model.vo.RouteVO;
 import com.river.malladmin.system.service.MenuService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -154,6 +159,83 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         return this.lambdaUpdate()
                 .eq(Menu::getId, menuId)
                 .set(Menu::getVisible, visible).update();
+    }
+
+    @Override
+    public List<RouteVO> getRoutes() {
+        List<Menu> visibleMenus;
+        if (SecurityUtils.isRoot()) {
+            // 如果是超级管理员，返回所有路由
+            visibleMenus = this.lambdaQuery()
+                    .eq(Menu::getVisible, 1)
+                    .in(Menu::getType, CollUtil.newArrayList(MenuTypeEnum.MENU, MenuTypeEnum.CATALOG))
+                    .list();
+        } else {
+            Set<String> roleCodes = SecurityUtils.getRoles();
+            visibleMenus = this.getBaseMapper().getMenusByRoleCodes(roleCodes);
+        }
+        return buildRoutes(SystemConstants.ROOT_NODE_ID, visibleMenus);
+    }
+
+    private List<RouteVO> buildRoutes(Long rootId, List<Menu> visibleMenus) {
+        List<RouteVO> routeVOS = CollUtil.newArrayList();
+
+        for (Menu menu : visibleMenus) {
+            if (menu.getParentId().equals(rootId)) {
+                RouteVO routeVO = toRouteVo(menu);
+                routeVOS.add(routeVO);
+                // 递归构建子路由
+                List<RouteVO> children = buildRoutes(menu.getId(), visibleMenus);
+                routeVO.setChildren(children);
+            }
+        }
+        return routeVOS;
+    }
+
+    /**
+     * 根据RouteBO创建RouteVO
+     */
+    private RouteVO toRouteVo(Menu menu) {
+        RouteVO routeVO = new RouteVO();
+        // 获取路由名称
+        String routeName = menu.getRouteName();
+        if (StrUtil.isBlank(routeName)) {
+            // 路由 name 需要驼峰，首字母大写
+            routeName = StringUtils.capitalize(StrUtil.toCamelCase(menu.getRoutePath(), '-'));
+        }
+        // 根据name路由跳转 this.$router.push({name:xxx})
+        routeVO.setName(routeName);
+
+        // 根据path路由跳转 this.$router.push({path:xxx})
+        routeVO.setPath(menu.getRoutePath());
+        routeVO.setRedirect(menu.getRedirect());
+        routeVO.setComponent(menu.getComponent());
+
+        RouteVO.Meta meta = new RouteVO.Meta();
+        meta.setTitle(menu.getName());
+        meta.setIcon(menu.getIcon());
+        meta.setHidden(StatusEnum.DISABLE.getValue().equals(menu.getVisible()));
+        // 【菜单】是否开启页面缓存
+        if (MenuTypeEnum.MENU.equals(menu.getType())
+                && ObjectUtil.equals(menu.getKeepAlive(), 1)) {
+            meta.setKeepAlive(true);
+        }
+        meta.setAlwaysShow(ObjectUtil.equals(menu.getAlwaysShow(), 1));
+
+        String paramsJson = menu.getParams();
+        // 将 JSON 字符串转换为 Map<String, String>
+        if (StrUtil.isNotBlank(paramsJson)) {
+            ObjectMapper objectMapper = new ObjectMapper();
+            try {
+                Map<String, String> paramMap = objectMapper.readValue(paramsJson, new TypeReference<>() {
+                });
+                meta.setParams(paramMap);
+            } catch (Exception e) {
+                throw new RuntimeException("解析参数失败", e);
+            }
+        }
+        routeVO.setMeta(meta);
+        return routeVO;
     }
 }
 

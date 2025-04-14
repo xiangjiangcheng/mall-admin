@@ -1,12 +1,12 @@
 package com.river.malladmin.system.service;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.river.malladmin.common.base.Option;
 import com.river.malladmin.system.model.entity.Menu;
 import com.river.malladmin.system.model.form.MenuForm;
 import com.river.malladmin.system.model.query.MenuPageQuery;
 import com.river.malladmin.system.model.vo.MenuVO;
+import com.river.malladmin.system.model.vo.RouteVO;
 
 import java.util.List;
 import java.util.Set;
@@ -30,4 +30,6 @@ public interface MenuService extends IService<Menu> {
     boolean deleteMenu(Long id);
 
     boolean updateMenuVisible(Long menuId, Integer visible);
+
+    List<RouteVO> getRoutes();
 }

@@ -5,6 +5,7 @@ import com.river.malladmin.common.result.Result;
 import com.river.malladmin.system.model.form.MenuForm;
 import com.river.malladmin.system.model.query.MenuPageQuery;
 import com.river.malladmin.system.model.vo.MenuVO;
+import com.river.malladmin.system.model.vo.RouteVO;
 import com.river.malladmin.system.service.MenuService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -87,6 +88,13 @@ public class MenuController {
     ) {
         boolean result = menuService.updateMenuVisible(menuId, visible);
         return Result.judge(result);
+    }
+
+    @Operation(summary = "获取菜单路由列表")
+    @GetMapping("/routes")
+    public Result<List<RouteVO>> getRoutes() {
+        List<RouteVO> result = menuService.getRoutes();
+        return Result.success(result);
     }
 
 }
