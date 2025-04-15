@@ -5,7 +5,10 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.river.malladmin.common.enums.MenuTypeEnum;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -16,8 +19,11 @@ import java.util.Date;
  *
  * @TableName sys_menu
  */
-@TableName(value = "sys_menu")
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@TableName(value = "sys_menu")
 public class Menu implements Serializable {
 
     @Serial
