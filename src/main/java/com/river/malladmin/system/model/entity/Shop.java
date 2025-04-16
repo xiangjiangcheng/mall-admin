@@ -1,18 +1,13 @@
 package com.river.malladmin.system.model.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.Date;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * @TableName biz_shop
@@ -23,11 +18,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Shop implements Serializable {
-    /**
-     *
-     */
-    @TableId(type = IdType.AUTO)
-    private Long id;
 
     /**
      * 关联商家用户ID
@@ -35,12 +25,12 @@ public class Shop implements Serializable {
     private Long userId;
 
     /**
-     *
+     * 店铺名称
      */
     private String name;
 
     /**
-     *
+     * 店铺logo
      */
     private String logo;
 
@@ -55,7 +45,7 @@ public class Shop implements Serializable {
     private String address;
 
     /**
-     *
+     * 联系电话
      */
     private String phone;
 
@@ -79,31 +69,4 @@ public class Shop implements Serializable {
      */
     private BigDecimal minOrderAmount;
 
-    /**
-     * 创建人 ID
-     */
-    private Long createBy;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 更新人ID
-     */
-    private Long updateBy;
-
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
-
-    /**
-     * 逻辑删除标识(0-未删除 1-已删除)
-     */
-    private Integer isDeleted;
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 }

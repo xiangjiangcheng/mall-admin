@@ -73,7 +73,7 @@ public class MenuController {
     @DeleteMapping("/{id}")
     @PreAuthorize("@ss.hasPermission('sys:menu:delete')")
     public Result<?> deleteMenu(
-            @Parameter(description = "菜单ID，多个以英文(,)分割") @PathVariable("id") Long id
+            @Parameter(description = "菜单ID") @PathVariable("id") Long id
     ) {
         boolean result = menuService.deleteMenu(id);
         return Result.judge(result);

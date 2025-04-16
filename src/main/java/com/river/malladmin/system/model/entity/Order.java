@@ -1,17 +1,12 @@
 package com.river.malladmin.system.model.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.Date;
-
 import com.river.malladmin.common.base.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @TableName biz_order
@@ -20,11 +15,6 @@ import lombok.EqualsAndHashCode;
 @TableName(value = "biz_order")
 @Data
 public class Order extends BaseEntity {
-    /**
-     *
-     */
-    @TableId(type = IdType.AUTO)
-    private Long id;
 
     /**
      * 订单号
@@ -71,31 +61,4 @@ public class Order extends BaseEntity {
      */
     private Date payTime;
 
-    /**
-     * 创建人 ID
-     */
-    private Long createBy;
-
-    /**
-     * 创建时间
-     */
-    private Date createTime;
-
-    /**
-     * 更新人ID
-     */
-    private Long updateBy;
-
-    /**
-     * 更新时间
-     */
-    private Date updateTime;
-
-    /**
-     * 逻辑删除标识(0-未删除 1-已删除)
-     */
-    private Integer isDeleted;
-
-    @TableField(exist = false)
-    private static final long serialVersionUID = 1L;
 }
