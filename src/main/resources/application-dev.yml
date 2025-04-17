@@ -49,6 +49,7 @@ springdoc:
       paths-to-match: '/**'
       packages-to-scan:
         - com.river.malladmin.system.controller
+        - com.river.malladmin.shared.codegen.controller
   default-flat-param-object: true
 
 # knife4j的增强配置，不需要增强可以不配

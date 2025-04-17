@@ -2,8 +2,10 @@ package com.river.malladmin.system.service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,6 +16,7 @@ import com.river.malladmin.common.enums.StatusEnum;
 import com.river.malladmin.common.exception.BusinessException;
 import com.river.malladmin.common.result.ResultCode;
 import com.river.malladmin.security.utils.SecurityUtils;
+import com.river.malladmin.shared.codegen.model.entity.GenConfig;
 import com.river.malladmin.system.mapper.MenuMapper;
 import com.river.malladmin.system.model.entity.Menu;
 import com.river.malladmin.system.model.form.MenuForm;
@@ -236,6 +239,121 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
         }
         routeVO.setMeta(meta);
         return routeVO;
+    }
+
+    /**
+     * 代码生成时添加菜单
+     *
+     * @param parentMenuId 父菜单ID
+     * @param genConfig    实体名称
+     */
+    @Override
+    public void addMenuForCodegen(Long parentMenuId, GenConfig genConfig) {
+        Menu parentMenu = this.getById(parentMenuId);
+        Assert.notNull(parentMenu, "上级菜单不存在");
+
+        String entityName = genConfig.getEntityName();
+
+        long count = this.count(new LambdaQueryWrapper<Menu>().eq(Menu::getRouteName, entityName));
+        if (count > 0) {
+            return;
+        }
+
+        // 获取父级菜单子菜单最带的排序
+        Menu maxSortMenu = this.getOne(new LambdaQueryWrapper<Menu>().eq(Menu::getParentId, parentMenuId)
+                .orderByDesc(Menu::getSort)
+                .last("limit 1")
+        );
+        int sort = 1;
+        if (maxSortMenu != null) {
+            sort = maxSortMenu.getSort() + 1;
+        }
+
+        Menu menu = new Menu();
+        menu.setParentId(parentMenuId);
+        menu.setName(genConfig.getBusinessName());
+
+        menu.setRouteName(entityName);
+        menu.setRoutePath(StrUtil.toSymbolCase(entityName, '-'));
+        menu.setComponent(genConfig.getModuleName() + "/" + StrUtil.toSymbolCase(entityName, '-') + "/index");
+        menu.setType(MenuTypeEnum.MENU);
+        menu.setSort(sort);
+        menu.setVisible(1);
+        boolean result = this.save(menu);
+
+        if (result) {
+            // 生成treePath
+            String treePath = generateMenuTreePath(parentMenuId);
+            menu.setTreePath(treePath);
+            this.updateById(menu);
+
+            // 生成CURD按钮权限
+            String permPrefix = genConfig.getModuleName() + ":" + StrUtil.lowerFirst(entityName) + ":";
+            String[] actions = {"查询", "新增", "编辑", "删除"};
+            String[] perms = {"query", "add", "edit", "delete"};
+
+            for (int i = 0; i < actions.length; i++) {
+                Menu button = new Menu();
+                button.setParentId(menu.getId());
+                button.setType(MenuTypeEnum.BUTTON);
+                button.setName(actions[i]);
+                button.setPerm(permPrefix + perms[i]);
+                button.setSort(i + 1);
+                this.save(button);
+
+                // 生成 treepath
+                button.setTreePath(treePath + "," + button.getId());
+                this.updateById(button);
+            }
+        }
+    }
+
+    /**
+     * 部门路径生成
+     *
+     * @param parentId 父ID
+     * @return 父节点路径以英文逗号(, )分割，eg: 1,2,3
+     */
+    private String generateMenuTreePath(Long parentId) {
+        if (SystemConstants.ROOT_NODE_ID.equals(parentId)) {
+            return String.valueOf(parentId);
+        } else {
+            Menu parent = this.getById(parentId);
+            return parent != null ? parent.getTreePath() + "," + parent.getId() : null;
+        }
+    }
+
+    @Override
+    public List<Option<Long>> listMenuOptions(boolean onlyParent) {
+        List<Menu> menuList = this.list(new LambdaQueryWrapper<Menu>()
+                .in(onlyParent, Menu::getType, MenuTypeEnum.CATALOG.getValue(), MenuTypeEnum.MENU.getValue())
+                .orderByAsc(Menu::getSort)
+        );
+        return buildMenuOptions(SystemConstants.ROOT_NODE_ID, menuList);
+    }
+
+    /**
+     * 递归生成菜单下拉层级列表
+     *
+     * @param parentId 父级ID
+     * @param menuList 菜单列表
+     * @return 菜单下拉列表
+     */
+    private List<Option<Long>> buildMenuOptions(Long parentId, List<Menu> menuList) {
+        List<Option<Long>> menuOptions = new ArrayList<>();
+
+        for (Menu menu : menuList) {
+            if (menu.getParentId().equals(parentId)) {
+                Option<Long> option = new Option<>(menu.getId(), menu.getName());
+                List<Option<Long>> subMenuOptions = buildMenuOptions(menu.getId(), menuList);
+                if (!subMenuOptions.isEmpty()) {
+                    option.setChildren(subMenuOptions);
+                }
+                menuOptions.add(option);
+            }
+        }
+
+        return menuOptions;
     }
 }
 

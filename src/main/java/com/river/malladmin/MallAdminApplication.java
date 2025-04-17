@@ -14,7 +14,7 @@ import java.net.InetAddress;
 @Slf4j
 @SpringBootApplication
 @EnableTransactionManagement
-@MapperScan("com.river.malladmin.system.mapper")
+@MapperScan({"com.river.malladmin.system.mapper", "com.river.malladmin.shared.codegen.mapper"})
 public class MallAdminApplication {
 
     public static void main(String[] args) {

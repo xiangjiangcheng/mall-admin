@@ -3,6 +3,8 @@ spring:
     name: mall-admin
   profiles:
     active: dev
+  config:
+    import: classpath:codegen.yml
 
 server:
   port: 8999

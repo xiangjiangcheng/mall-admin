@@ -12,6 +12,8 @@ public enum LogModuleEnum {
     EXCEPTION("异常"),
     USER("用户"),
     ROLE("权限"),
+    DICT("数据字典"),
+    OTHER("其他"),
     ;
 
     private final String moduleName;

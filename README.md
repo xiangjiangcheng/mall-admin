@@ -13,6 +13,8 @@ Java 17 + SpringBoot 3.3.10 + Spring Security 6 + JWT + MyBatis-Plus + Redis + M
 6.集成Spring security + JWT认证鉴权 <br>
 7.集成Caffeine缓存 <br>
 8.登录captcha 验证码 <br>
+9.数据字典 <br>
+10.代码生成器 <br>
 
 ## TODO
 1.实现权限管理 <br>
