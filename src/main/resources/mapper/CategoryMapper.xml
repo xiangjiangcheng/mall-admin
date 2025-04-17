@@ -23,4 +23,14 @@
         create_time,update_by,update_time,
         is_deleted
     </sql>
+    <select id="getCategoryPage" resultType="com.river.malladmin.system.model.vo.CategoryVO">
+        select
+        <include refid="Base_Column_List"/>
+        from biz_category
+        where is_deleted = 0
+        <if test="queryParams.keywords != null and queryParams.keywords != ''">
+            and name like concat('%', #{queryParams.keywords}, '%')
+        </if>
+        order by sort asc
+    </select>
 </mapper>

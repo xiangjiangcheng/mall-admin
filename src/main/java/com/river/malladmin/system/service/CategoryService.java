@@ -1,5 +1,6 @@
 package com.river.malladmin.system.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.river.malladmin.common.base.Option;
 import com.river.malladmin.system.model.entity.Category;
@@ -16,13 +17,13 @@ import java.util.List;
  */
 public interface CategoryService extends IService<Category> {
 
-    List<CategoryVO> getCategoryList(CategoryPageQuery queryParams);
+    IPage<CategoryVO> getCategoryList(CategoryPageQuery queryParams);
 
     List<Option<Long>> listCategoryOptions();
 
     CategoryForm getCategoryForm(Long id);
 
-    boolean saveCategory(CategoryForm categoryForm);
+    boolean saveCategory(Long id, CategoryForm formData);
 
     boolean deleteCategory(Long id);
 }

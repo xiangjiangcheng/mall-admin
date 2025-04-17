@@ -8,7 +8,6 @@ import com.river.malladmin.system.mapper.RoleMenuMapper;
 import com.river.malladmin.system.model.entity.Menu;
 import com.river.malladmin.system.model.entity.RoleMenu;
 import com.river.malladmin.system.model.vo.RolePermVO;
-import com.river.malladmin.system.service.MenuService;
 import com.river.malladmin.system.service.RoleMenuService;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
@@ -30,16 +29,17 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RoleMenuServiceImpl extends ServiceImpl<RoleMenuMapper, RoleMenu> implements RoleMenuService {
 
-    private final MenuService menuService;
     private final RedisTemplate<String, Object> redisTemplate;
 
     @PostConstruct
     public void init() {
         // 初始化角色权限关系映射到redis中
-        refreshRoleMenuMap();
+        refreshRolePermsCache();
     }
 
-    public void refreshRoleMenuMap() {
+    public void refreshRolePermsCache() {
+        // 清理权限缓存
+        redisTemplate.opsForHash().delete(RedisConstants.System.ROLE_PERMS, "*");
         // 从数据库中查询所有角色权限关系
         this.baseMapper.selectRolePerms(null).forEach(roleMenu -> {
             // 将角色权限关系存储到redis中
@@ -50,9 +50,7 @@ public class RoleMenuServiceImpl extends ServiceImpl<RoleMenuMapper, RoleMenu> i
     @Override
     public List<Menu> getMenusByRoleIds(Set<Long> roleIds) {
         if (roleIds.isEmpty()) return Collections.emptyList();
-        List<RoleMenu> roleMenus = this.lambdaQuery().in(RoleMenu::getRoleId, roleIds).list();
-        Set<Long> menuIds = roleMenus.stream().map(RoleMenu::getMenuId).collect(Collectors.toSet());
-        return menuService.getMenusByIds(menuIds);
+        return this.baseMapper.getMenusByRoleIds(roleIds);
     }
 
     @Override
@@ -79,7 +77,7 @@ public class RoleMenuServiceImpl extends ServiceImpl<RoleMenuMapper, RoleMenu> i
         this.saveBatch(roleMenus);
 
         // 刷新角色权限关系映射到redis中
-        refreshRoleMenuMap();
+        refreshRolePermsCache();
         return true;
     }
 

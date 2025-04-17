@@ -25,7 +25,6 @@ public class Option<T> {
     @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
     private String tag;
 
-
     @Schema(description = "子选项列表")
     @JsonInclude(value = JsonInclude.Include.NON_EMPTY)
     private List<Option<T>> children;

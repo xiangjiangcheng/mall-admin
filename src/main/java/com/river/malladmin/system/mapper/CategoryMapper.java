@@ -1,7 +1,12 @@
 package com.river.malladmin.system.mapper;
 
-import com.river.malladmin.system.model.entity.Category;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.river.malladmin.system.model.entity.Category;
+import com.river.malladmin.system.model.query.CategoryPageQuery;
+import com.river.malladmin.system.model.vo.CategoryVO;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * @author xiang
@@ -11,6 +16,7 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface CategoryMapper extends BaseMapper<Category> {
 
+    IPage<CategoryVO> getCategoryPage(@Param("page") Page<CategoryVO> page, @Param("queryParams") CategoryPageQuery queryParams);
 }
 
 

@@ -12,9 +12,6 @@ import java.util.List;
 
 /**
  * 字典 访问层
- *
- * @author Ray Hao
- * @since 2.9.0
  */
 @Mapper
 public interface DictMapper extends BaseMapper<Dict> {

@@ -1,6 +1,7 @@
 package com.river.malladmin.system.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.river.malladmin.system.model.entity.Menu;
 import com.river.malladmin.system.model.entity.RoleMenu;
 import com.river.malladmin.system.model.vo.RolePermVO;
 import org.apache.ibatis.annotations.Delete;
@@ -8,6 +9,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author xiang
@@ -36,6 +38,16 @@ public interface RoleMenuMapper extends BaseMapper<RoleMenu> {
 
     @Delete("delete from sys_role_menu where role_id = #{roleId}")
     void deleteMenusByRoleId(Long roleId);
+
+    /**
+     * 根据角色ID查询菜单列表
+     *
+     * @param roleIds 角色ID集合
+     * @return 菜单列表
+     */
+    List<Menu> getMenusByRoleIds(@Param("roleIds") Set<Long> roleIds);
+
+    List<Menu> getMenusByRoleId(@Param("roleId") Long roleId);
 }
 
 

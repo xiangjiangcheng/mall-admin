@@ -1,7 +1,9 @@
 package com.river.malladmin.system.controller;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.river.malladmin.common.base.Option;
+import com.river.malladmin.common.result.PageResult;
 import com.river.malladmin.common.result.Result;
 import com.river.malladmin.system.model.form.CategoryForm;
 import com.river.malladmin.system.model.query.CategoryPageQuery;
@@ -22,7 +24,7 @@ import java.util.List;
  */
 @Slf4j
 @RestController
-@RequestMapping("/category")
+@RequestMapping("/api/v1/categorys")
 @RequiredArgsConstructor
 @Tag(name = "05.Category Apis")
 public class CategoryController {
@@ -31,10 +33,10 @@ public class CategoryController {
 
     @ApiOperationSupport(order = 1)
     @Operation(summary = "分类列表")
-    @GetMapping
-    public Result<List<CategoryVO>> getCategoryList(CategoryPageQuery queryParams) {
-        List<CategoryVO> list = categoryService.getCategoryList(queryParams);
-        return Result.success(list);
+    @GetMapping("/page")
+    public PageResult<CategoryVO> getCategoryList(CategoryPageQuery queryParams) {
+        IPage<CategoryVO> list = categoryService.getCategoryList(queryParams);
+        return PageResult.success(list);
     }
 
     @ApiOperationSupport(order = 2)
@@ -59,7 +61,7 @@ public class CategoryController {
     @PostMapping
     @PreAuthorize("@ss.hasPermission('sys:category:add')")
     public Result<Boolean> addCategory(@RequestBody CategoryForm categoryForm) {
-        boolean result = categoryService.saveCategory(categoryForm);
+        boolean result = categoryService.saveCategory(null, categoryForm);
         return Result.judge(result);
     }
 
@@ -67,8 +69,8 @@ public class CategoryController {
     @Operation(summary = "修改分类")
     @PutMapping(value = "/{id}")
     @PreAuthorize("@ss.hasPermission('sys:category:edit')")
-    public Result<Boolean> updateCategory(@RequestBody CategoryForm categoryForm) {
-        boolean result = categoryService.saveCategory(categoryForm);
+    public Result<Boolean> updateCategory(@PathVariable("id") Long id, @RequestBody CategoryForm categoryForm) {
+        boolean result = categoryService.saveCategory(id, categoryForm);
         return Result.judge(result);
     }
 

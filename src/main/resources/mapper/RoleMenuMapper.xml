@@ -24,4 +24,25 @@
             </if>
         </where>
     </select>
+    <select id="getMenusByRoleIds" resultType="com.river.malladmin.system.model.entity.Menu">
+        SELECT
+        m.*
+        FROM
+            sys_role_menu rm
+                INNER JOIN sys_menu m ON rm.menu_id = m.id
+        WHERE
+            rm.role_id IN
+            <foreach collection="roleIds" item="roleId" open="(" separator="," close=")">
+                #{roleId}
+            </foreach>
+    </select>
+    <select id="getMenusByRoleId" resultType="com.river.malladmin.system.model.entity.Menu">
+        SELECT
+            m.*
+        FROM
+            sys_role_menu rm
+                INNER JOIN sys_menu m ON rm.menu_id = m.id
+        WHERE
+            rm.role_id = #{roleId}
+    </select>
 </mapper>

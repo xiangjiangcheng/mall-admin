@@ -6,6 +6,7 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,6 +25,7 @@ import com.river.malladmin.system.model.query.MenuPageQuery;
 import com.river.malladmin.system.model.vo.MenuVO;
 import com.river.malladmin.system.model.vo.RouteVO;
 import com.river.malladmin.system.service.MenuService;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -35,7 +37,10 @@ import java.util.stream.Collectors;
  * @author xiang
  */
 @Service
+@RequiredArgsConstructor
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements MenuService {
+
+    private final RoleMenuServiceImpl roleMenuService;
 
     @Override
     public List<Menu> getMenusByIds(Set<Long> menuIds) {
@@ -148,8 +153,53 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu> implements Me
             throw new RuntimeException("父级菜单不能为当前菜单");
         }
 
-        Menu menu = menuForm.toEntity();
-        return this.saveOrUpdate(menu);
+        Menu entity = menuForm.toEntity();
+        String treePath = generateMenuTreePath(menuForm.getParentId());
+        entity.setTreePath(treePath);
+
+        // 新增类型为菜单时候 路由名称唯一
+        if (MenuTypeEnum.MENU.equals(menuType)) {
+            Assert.isFalse(this.exists(new LambdaQueryWrapper<Menu>()
+                    .eq(Menu::getRouteName, entity.getRouteName())
+                    .ne(menuForm.getId() != null, Menu::getId, menuForm.getId())
+            ), "路由名称已存在");
+        } else {
+            // 其他类型时 给路由名称赋值为空
+            entity.setRouteName(null);
+        }
+
+        boolean result = this.saveOrUpdate(entity);
+        if (result) {
+            // 编辑刷新角色权限缓存
+            if (menuForm.getId() != null) {
+                roleMenuService.refreshRolePermsCache();
+            }
+        }
+        // 修改菜单如果有子菜单，则更新子菜单的树路径
+        updateChildrenTreePath(entity.getId(), treePath);
+        return this.saveOrUpdate(entity);
+    }
+
+    /**
+     * 更新子菜单树路径
+     *
+     * @param id       当前菜单ID
+     * @param treePath 当前菜单树路径
+     */
+    private void updateChildrenTreePath(Long id, String treePath) {
+        List<Menu> children = this.list(new LambdaQueryWrapper<Menu>().eq(Menu::getParentId, id));
+        if (CollectionUtil.isNotEmpty(children)) {
+            // 子菜单的树路径等于父菜单的树路径加上父菜单ID
+            String childTreePath = treePath + "," + id;
+            this.update(new LambdaUpdateWrapper<Menu>()
+                    .eq(Menu::getParentId, id)
+                    .set(Menu::getTreePath, childTreePath)
+            );
+            for (Menu child : children) {
+                // 递归更新子菜单
+                updateChildrenTreePath(child.getId(), childTreePath);
+            }
+        }
     }
 
     @Override
